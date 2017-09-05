@@ -1,0 +1,62 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+
+	<bean id="allocationDAO" class="dao.AllocationDAO">
+		<property name="dataSourceTopaze" ref="dataSourceTopaze" />
+		<property name="dataSourceWiseam" ref="dataSourceWiseam" />
+	</bean>
+	
+	<bean id="allocationHistoriqueDAO" class="dao.AllocationHistoriqueDAO">
+		<property name="dataSourceTopaze" ref="dataSourceTopaze" />
+		<property name="dataSourceWiseam" ref="dataSourceWiseam" />
+	</bean>
+
+	<bean id="allocationWecoHistoriqueDAO" class="dao.AllocationWecoHistoriqueDAO">
+		<property name="dataSourceTopaze" ref="dataSourceTopaze" />
+		<property name="dataSourceWiseam" ref="dataSourceWiseam" />
+	</bean>
+		
+	<bean id="assetDAO" class="dao.AssetDAO">
+		<property name="dataSourceTopaze" ref="dataSourceTopaze" />
+		<property name="dataSourceWiseam" ref="dataSourceWiseam" />
+	</bean>
+	
+	<bean id="assetHistoriqueDAO" class="dao.AssetHistoriqueDAO">
+		<property name="dataSourceTopaze" ref="dataSourceTopaze" />
+		<property name="dataSourceWiseam" ref="dataSourceWiseam" />
+	</bean>
+	
+	<bean id="assureurDAO" class="dao.AssureurDAO">
+		<property name="dataSourceTopaze" ref="dataSourceTopaze" />
+		<property name="dataSourceWiseam" ref="dataSourceWiseam" />
+	</bean>
+	
+	<bean id="cGPDAO" class="dao.CGPDAO">
+		<property name="dataSourceTopaze" ref="dataSourceTopaze" />
+		<property name="dataSourceWiseam" ref="dataSourceWiseam" />
+	</bean>
+	
+	<bean id="clientFinalDAO" class="dao.ClientFinalDAO">
+		<property name="dataSourceTopaze" ref="dataSourceTopaze" />
+		<property name="dataSourceWiseam" ref="dataSourceWiseam" />
+	</bean>
+	
+	<bean id="portefeuilleDAO" class="dao.PortefeuilleDAO">
+		<property name="dataSourceTopaze" ref="dataSourceTopaze" />
+		<property name="dataSourceWiseam" ref="dataSourceWiseam" />
+	</bean>
+	
+	<bean id="portefeuilleGDAO" class="dao.PortefeuilleGDAO">
+		<property name="dataSourceTopaze" ref="dataSourceTopaze" />
+		<property name="dataSourceWiseam" ref="dataSourceWiseam" />
+	</bean>
+	
+	<bean id="portefeuilleHistoriqueDAO" class="dao.PortefeuilleHistoriqueDAO">
+		<property name="dataSourceTopaze" ref="dataSourceTopaze" />
+		<property name="dataSourceWiseam" ref="dataSourceWiseam" />
+	</bean>
+	
+</beans>
