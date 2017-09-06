@@ -1,62 +1,87 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
-	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
-
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
 	<bean id="allocationDAO" class="dao.AllocationDAO">
 		<property name="dataSourceTopaze" ref="dataSourceTopaze" />
 		<property name="dataSourceWiseam" ref="dataSourceWiseam" />
+		<property name="hibernateTopaze" ref="hibernateTopaze"/>
+		<property name="hibernateWiseam" ref="hibernateWiseam"/>
 	</bean>
 	
 	<bean id="allocationHistoriqueDAO" class="dao.AllocationHistoriqueDAO">
 		<property name="dataSourceTopaze" ref="dataSourceTopaze" />
 		<property name="dataSourceWiseam" ref="dataSourceWiseam" />
+		<property name="hibernateTopaze" ref="hibernateTopaze"/>
+		<property name="hibernateWiseam" ref="hibernateWiseam"/>
 	</bean>
 
 	<bean id="allocationWecoHistoriqueDAO" class="dao.AllocationWecoHistoriqueDAO">
 		<property name="dataSourceTopaze" ref="dataSourceTopaze" />
 		<property name="dataSourceWiseam" ref="dataSourceWiseam" />
+		<property name="hibernateTopaze" ref="hibernateTopaze"/>
+		<property name="hibernateWiseam" ref="hibernateWiseam"/>
 	</bean>
 		
 	<bean id="assetDAO" class="dao.AssetDAO">
 		<property name="dataSourceTopaze" ref="dataSourceTopaze" />
 		<property name="dataSourceWiseam" ref="dataSourceWiseam" />
+		<property name="hibernateTopaze" ref="hibernateTopaze"/>
+		<property name="hibernateWiseam" ref="hibernateWiseam"/>
 	</bean>
 	
 	<bean id="assetHistoriqueDAO" class="dao.AssetHistoriqueDAO">
 		<property name="dataSourceTopaze" ref="dataSourceTopaze" />
 		<property name="dataSourceWiseam" ref="dataSourceWiseam" />
+		<property name="hibernateTopaze" ref="hibernateTopaze"/>
+		<property name="hibernateWiseam" ref="hibernateWiseam"/>
 	</bean>
 	
 	<bean id="assureurDAO" class="dao.AssureurDAO">
 		<property name="dataSourceTopaze" ref="dataSourceTopaze" />
 		<property name="dataSourceWiseam" ref="dataSourceWiseam" />
+		<property name="hibernateTopaze" ref="hibernateTopaze"/>
+		<property name="hibernateWiseam" ref="hibernateWiseam"/>
 	</bean>
 	
 	<bean id="cGPDAO" class="dao.CGPDAO">
 		<property name="dataSourceTopaze" ref="dataSourceTopaze" />
 		<property name="dataSourceWiseam" ref="dataSourceWiseam" />
+		<property name="hibernateTopaze" ref="hibernateTopaze"/>
+		<property name="hibernateWiseam" ref="hibernateWiseam"/>
 	</bean>
 	
 	<bean id="clientFinalDAO" class="dao.ClientFinalDAO">
 		<property name="dataSourceTopaze" ref="dataSourceTopaze" />
 		<property name="dataSourceWiseam" ref="dataSourceWiseam" />
+		<property name="hibernateTopaze" ref="hibernateTopaze"/>
+		<property name="hibernateWiseam" ref="hibernateWiseam"/>
 	</bean>
 	
 	<bean id="portefeuilleDAO" class="dao.PortefeuilleDAO">
 		<property name="dataSourceTopaze" ref="dataSourceTopaze" />
 		<property name="dataSourceWiseam" ref="dataSourceWiseam" />
+		<property name="hibernateTopaze" ref="hibernateTopaze"/>
+		<property name="hibernateWiseam" ref="hibernateWiseam"/>
 	</bean>
 	
 	<bean id="portefeuilleGDAO" class="dao.PortefeuilleGDAO">
 		<property name="dataSourceTopaze" ref="dataSourceTopaze" />
 		<property name="dataSourceWiseam" ref="dataSourceWiseam" />
+		<property name="hibernateTopaze" ref="hibernateTopaze"/>
+		<property name="hibernateWiseam" ref="hibernateWiseam"/>
 	</bean>
 	
 	<bean id="portefeuilleHistoriqueDAO" class="dao.PortefeuilleHistoriqueDAO">
 		<property name="dataSourceTopaze" ref="dataSourceTopaze" />
 		<property name="dataSourceWiseam" ref="dataSourceWiseam" />
+		<property name="hibernateTopaze" ref="hibernateTopaze"/>
+		<property name="hibernateWiseam" ref="hibernateWiseam"/>
 	</bean>
 	
 </beans>

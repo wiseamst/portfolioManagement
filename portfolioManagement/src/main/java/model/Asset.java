@@ -17,8 +17,9 @@ import javax.persistence.OneToMany;
 public class Asset implements Serializable {
 
 	private int idAsset;
-	private int isin;
-	private int tickerBBG;
+	private String coins;
+	private String isin;
+	private String tickerBBG;
 	private String devise;
 	private String type;
 	private String nom;
@@ -28,27 +29,22 @@ public class Asset implements Serializable {
 	private String  zone;
 	private Set<Allocation> setAlloc;
 	
-	public Asset(int isin, int tickerBBG, String devise, String type, String nom, float dernierPrix, Date dateMAJ) {
-		super();
-		this.isin = isin;
-		this.tickerBBG = tickerBBG;
-		this.devise = devise;
-		this.type = type;
-		this.nom = nom;
-		this.dernierPrix = dernierPrix;
-		this.dateMAJ = dateMAJ;
-	}
-	
-	
-	public Asset(int idAsset, int isin, int tickerBBG, String devise, String type, String nom, float dernierPrix,
-			Date dateMAJ) {
+	public Asset(int idAsset, String coins, String isin, String tickerBBG, String devise, String type, String nom,
+			String classType, String zone) {
 		super();
 		this.idAsset = idAsset;
+		this.coins = coins;
 		this.isin = isin;
 		this.tickerBBG = tickerBBG;
 		this.devise = devise;
 		this.type = type;
 		this.nom = nom;
+		this.classType = classType;
+		this.zone = zone;
+	}
+
+	public Asset(float dernierPrix, Date dateMAJ) {
+		super();
 		this.dernierPrix = dernierPrix;
 		this.dateMAJ = dateMAJ;
 	}
@@ -62,26 +58,38 @@ public class Asset implements Serializable {
 		this.idAsset = idAsset;
 	}
 	
+	@Column	
+	public String getCoins() {
+		return coins;
+	}
+
+	public void setCoins(String coins) {
+		this.coins = coins;
+	}
+
 	@Column
-	public int getIsin() {
+	public String getIsin() {
 		return isin;
 	}
-	public void setIsin(int isin) {
+
+	public void setIsin(String isin) {
 		this.isin = isin;
 	}
-	
+
 	@Column
-	public int getTickerBBG() {
+	public String getTickerBBG() {
 		return tickerBBG;
 	}
-	public void setTickerBBG(int tickerBBG) {
+
+	public void setTickerBBG(String tickerBBG) {
 		this.tickerBBG = tickerBBG;
 	}
-	
+
 	@Column
 	public String getDevise() {
 		return devise;
 	}
+
 	public void setDevise(String devise) {
 		this.devise = devise;
 	}

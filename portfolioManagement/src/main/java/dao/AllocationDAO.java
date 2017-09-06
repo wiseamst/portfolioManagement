@@ -7,6 +7,8 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.springframework.orm.hibernate5.HibernateTemplate;
+
 import idao.AllocationIDAO;
 import model.Allocation;
 
@@ -14,6 +16,9 @@ public class AllocationDAO implements AllocationIDAO{
 
 	private DataSource dataSourceTopaze;
 	private DataSource dataSourceWiseam;
+	
+	private HibernateTemplate hibernateWiseam;
+	private HibernateTemplate hibernateTopaze;
 	
 	public DataSource getDataSourceTopaze() {
 		return dataSourceTopaze;
@@ -27,6 +32,26 @@ public class AllocationDAO implements AllocationIDAO{
 
 	public DataSource getDataSourceWiseam() {
 		return dataSourceWiseam;
+	}
+
+
+	public HibernateTemplate getHibernateWiseam() {
+		return hibernateWiseam;
+	}
+
+
+	public void setHibernateWiseam(HibernateTemplate hibernateWiseam) {
+		this.hibernateWiseam = hibernateWiseam;
+	}
+
+
+	public HibernateTemplate getHibernateTopaze() {
+		return hibernateTopaze;
+	}
+
+
+	public void setHibernateTopaze(HibernateTemplate hibernateTopaze) {
+		this.hibernateTopaze = hibernateTopaze;
 	}
 
 

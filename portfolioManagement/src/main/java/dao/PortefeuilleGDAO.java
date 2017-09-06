@@ -7,6 +7,8 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.springframework.orm.hibernate5.HibernateTemplate;
+
 import idao.PortefeuilleGIDAO;
 import model.PortefeuilleG;
 
@@ -15,6 +17,8 @@ public class PortefeuilleGDAO implements PortefeuilleGIDAO {
 	private DataSource dataSourceTopaze;
 	private DataSource dataSourceWiseam;
 	
+	private HibernateTemplate hibernateWiseam;
+	private HibernateTemplate hibernateTopaze;
 	
 	public DataSource getDataSourceTopaze() {
 		return dataSourceTopaze;
@@ -34,6 +38,27 @@ public class PortefeuilleGDAO implements PortefeuilleGIDAO {
 	public void setDataSourceWiseam(DataSource dataSourceWiseam) {
 		this.dataSourceWiseam = dataSourceWiseam;
 	}
+
+	
+	public HibernateTemplate getHibernateWiseam() {
+		return hibernateWiseam;
+	}
+
+
+	public void setHibernateWiseam(HibernateTemplate hibernateWiseam) {
+		this.hibernateWiseam = hibernateWiseam;
+	}
+
+
+	public HibernateTemplate getHibernateTopaze() {
+		return hibernateTopaze;
+	}
+
+
+	public void setHibernateTopaze(HibernateTemplate hibernateTopaze) {
+		this.hibernateTopaze = hibernateTopaze;
+	}
+
 
 	public void insert(PortefeuilleG portefeuilleG) {
 		// TODO Auto-generated method stub

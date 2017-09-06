@@ -5,6 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.sql.DataSource;
+
+import org.springframework.orm.hibernate5.HibernateTemplate;
+
 import idao.PortefeuilleHistoriqueIDAO;
 import model.PortefeuilleHistorique;
 
@@ -13,6 +16,8 @@ public class PortefeuilleHistoriqueDAO  implements PortefeuilleHistoriqueIDAO {
 	private DataSource dataSourceTopaze;
 	private DataSource dataSourceWiseam;
 	
+	private HibernateTemplate hibernateWiseam;
+	private HibernateTemplate hibernateTopaze;
 	
 	public DataSource getDataSourceTopaze() {
 		return dataSourceTopaze;
@@ -32,6 +37,27 @@ public class PortefeuilleHistoriqueDAO  implements PortefeuilleHistoriqueIDAO {
 	public void setDataSourceWiseam(DataSource dataSourceWiseam) {
 		this.dataSourceWiseam = dataSourceWiseam;
 	}
+
+	
+	public HibernateTemplate getHibernateWiseam() {
+		return hibernateWiseam;
+	}
+
+
+	public void setHibernateWiseam(HibernateTemplate hibernateWiseam) {
+		this.hibernateWiseam = hibernateWiseam;
+	}
+
+
+	public HibernateTemplate getHibernateTopaze() {
+		return hibernateTopaze;
+	}
+
+
+	public void setHibernateTopaze(HibernateTemplate hibernateTopaze) {
+		this.hibernateTopaze = hibernateTopaze;
+	}
+
 
 	public void insert(PortefeuilleHistorique portefeuilleHistorique) {
 		// TODO Auto-generated method stub

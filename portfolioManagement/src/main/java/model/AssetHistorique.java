@@ -29,6 +29,19 @@ public class AssetHistorique implements Serializable{
 		this.dateArchivage = dateArchivage;
 	}
 
+	public AssetHistorique(float dernierPrix, Date dateArchivage, Asset asset) {
+		super();
+		this.dernierPrix = dernierPrix;
+		this.dateArchivage = dateArchivage;
+		this.asset = asset;
+	}
+
+	public AssetHistorique(Date dateArchivage, Asset asset) {
+		super();
+		this.dateArchivage = dateArchivage;
+		this.asset = asset;
+	}
+
 	@Column
 	public int getPerf() {
 		return perf;

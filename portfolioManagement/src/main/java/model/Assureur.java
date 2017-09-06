@@ -82,4 +82,6 @@ public class Assureur implements Serializable {
 		this.set_ptfs = set_ptfs;
 	}
 
+	
+
 }
