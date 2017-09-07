@@ -2,12 +2,9 @@ package model;
 
 import java.io.Serializable;
 import java.sql.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -15,19 +12,11 @@ import javax.persistence.ManyToOne;
 @Entity
 public class AssetHistorique implements Serializable{
 	
-	private int perf;
+	private float perf;
 	private float dernierPrix;
 	private Date dateArchivage;
 	
 	private Asset asset;
-	
-	
-	public AssetHistorique(int perf, float dernierPrix, Date dateArchivage) {
-		super();
-		this.perf = perf;
-		this.dernierPrix = dernierPrix;
-		this.dateArchivage = dateArchivage;
-	}
 
 	public AssetHistorique(float dernierPrix, Date dateArchivage, Asset asset) {
 		super();
@@ -43,19 +32,20 @@ public class AssetHistorique implements Serializable{
 	}
 
 	@Column
-	public int getPerf() {
-		return perf;
-	}
-	public void setPerf(int perf) {
+	public void setPerf(float perf) {
 		this.perf = perf;
+	}
+
+	public void setDernierPrix(float dernierPrix) {
+		this.dernierPrix = dernierPrix;
 	}
 	
 	@Column
 	public float getDernierPrix() {
 		return dernierPrix;
 	}
-	public void setDernierPrix(float dernierPrix) {
-		this.dernierPrix = dernierPrix;
+	public float getPerf() {
+		return perf;
 	}
 	
 	@Id
@@ -67,6 +57,7 @@ public class AssetHistorique implements Serializable{
 		this.dateArchivage = dateArchivage;
 	}
 	
+	@Id
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idAsset", nullable = false)
 	public Asset getAsset() {

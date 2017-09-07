@@ -4,13 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import javax.sql.DataSource;
-
 import org.springframework.orm.hibernate5.HibernateTemplate;
-
+import org.springframework.transaction.annotation.Transactional;
 import idao.PortefeuilleGIDAO;
+import model.ClientFinal;
 import model.PortefeuilleG;
+import model.PortefeuilleHistorique;
 
 public class PortefeuilleGDAO implements PortefeuilleGIDAO {
 
@@ -24,122 +24,98 @@ public class PortefeuilleGDAO implements PortefeuilleGIDAO {
 		return dataSourceTopaze;
 	}
 
-
 	public void setDataSourceTopaze(DataSource dataSourceTopaze) {
 		this.dataSourceTopaze = dataSourceTopaze;
 	}
-
 
 	public DataSource getDataSourceWiseam() {
 		return dataSourceWiseam;
 	}
 
-
 	public void setDataSourceWiseam(DataSource dataSourceWiseam) {
 		this.dataSourceWiseam = dataSourceWiseam;
 	}
-
 	
 	public HibernateTemplate getHibernateWiseam() {
 		return hibernateWiseam;
 	}
 
-
 	public void setHibernateWiseam(HibernateTemplate hibernateWiseam) {
 		this.hibernateWiseam = hibernateWiseam;
 	}
-
 
 	public HibernateTemplate getHibernateTopaze() {
 		return hibernateTopaze;
 	}
 
-
 	public void setHibernateTopaze(HibernateTemplate hibernateTopaze) {
 		this.hibernateTopaze = hibernateTopaze;
 	}
 
-
-	public void insert(PortefeuilleG portefeuilleG) {
-		// TODO Auto-generated method stub
+	@Transactional(value="txManagerWiseam",readOnly = false)
+	public void insertWiseamPtf(PortefeuilleG portefeuilleG) {
 		
-	}
-
-	public void insertPortefeuilleG(PortefeuilleG portefeuilleG){
-
-		String sql = "INSERT INTO PORTEFEUILLEG " +
-				"(NOM, NUMCONTRAT, DEVISE, ACTIFNET, VL," + 
-				"DATEMAJ, FORMEJURIDIQUEPTF, DEPOSITAIRE, VALORISATEUR, MONTANTINITIAL," + 
-				"BIC, IBAN, CATAMF, DATECREATION, CLASSIFICATIONAMF," + 
-				"DUREERECOMMANDEE, AFFECTATIONRESULTAT, CENTRALORDRE, REGLEMENTLIVRAISON," + 
-				"FRAISENTREE, FRAISSORTIE, fDGF, fDGV, COMMENTAIREGESTION," + 
-				"NIVEAURISQUE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?," + 
-		        "?, ?, ?, ?,?, ?, ?, ?, ?,?)";
+		hibernateWiseam.saveOrUpdate(portefeuilleG);
 		
-		        Connection conn = null;
-
-		try {
-			conn = dataSourceWiseam.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, portefeuilleG.getNom());
-			ps.setString(2, portefeuilleG.getNumContrat());
-			ps.setString(3, portefeuilleG.getDevise());
-			ps.setFloat(4, portefeuilleG.getActifNet());
-			ps.setFloat(5, portefeuilleG.getVl());
-			ps.setDate(6, portefeuilleG.getDateMAJ());
-			ps.setString(7, portefeuilleG.getFormeJuridiquePTF());
-			ps.setString(8, portefeuilleG.getDepositaire());
-			ps.setString(9, portefeuilleG.getValorisateur());
-			ps.setFloat(10, portefeuilleG.getMontantInitial());
-			ps.setString(11, portefeuilleG.getBic());
-			ps.setString(12, portefeuilleG.getIban());
-			ps.setString(13, portefeuilleG.getCatAMF());
-			ps.setDate(14, portefeuilleG.getDateCreation());
-			ps.setString(15, portefeuilleG.getClassificationAMF());
-			ps.setString(16, portefeuilleG.getDureeRecommandee());
-			ps.setString(17, portefeuilleG.getAffectationResultat());
-			ps.setString(18, portefeuilleG.getCentralOrdre());
-			ps.setString(19, portefeuilleG.getReglementLivraison());
-			ps.setFloat(20, portefeuilleG.getFraisEntree());
-			ps.setFloat(21, portefeuilleG.getFraisSortie());
-			ps.setFloat(22, portefeuilleG.getFDGF());
-			ps.setFloat(23, portefeuilleG.getFDGV());
-			ps.setString(24, portefeuilleG.getCommentaireGestion());
-			ps.setString(25, portefeuilleG.getNiveauRisque());
-			ps.executeUpdate();
-			ps.close();
-
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {}
-			}
-		}
 	}
 	
-	public PortefeuilleG findByPortefeuilleGId(int portefeuilleGId){
+	@Transactional(value="txManagerWiseam",readOnly = false)
+	public PortefeuilleG findAllPtfTopaze(PortefeuilleHistoriqueDAO portefeuilleHistoriqueDAO,ClientFinalDAO clientFinalDAO){
 
-		String sql = "SELECT * FROM PORTEFEUILLEG WHERE IDPORTEFG = ?";
+		String sql = "SELECT nbins,amnav,dasta,danav,codom,coccy,tyctr,tyent,naent,coent,nbben,isin FROM  tw_portfolio";
 
 		Connection conn = null;
 
 		try {
 			conn = dataSourceTopaze.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, portefeuilleGId);
 			PortefeuilleG portefeuilleG = null;
+			String nomClient;
 			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
-				portefeuilleG = new PortefeuilleG("", "", "", 0, 0,
-						null, "", "", "", 0,
-						"", "", "", null, "",
-						"", "", "", "",
-						0, 0, 0 ,0, "",
-						"");
+			while (rs.next()) {
+				portefeuilleG = new PortefeuilleG(
+						rs.getInt("NBINS"),
+						rs.getString("COENT"),
+						rs.getString("COCCY"),
+						rs.getFloat("AMNAV"),
+						rs.getDate("DANAV"),
+						rs.getString("TYENT"),
+						rs.getString("TYCTR"),
+						rs.getString("CODOM"),
+						rs.getDate("DASTA"),
+						rs.getString("ISIN"),
+						rs.getInt("NBBEN")
+						);
+				
+				if (portefeuilleG.getIdAR()!=0) {
+					portefeuilleG.setArb(true);
+				}
+
+				portefeuilleG.setVl(findVlPtfTopaze(portefeuilleG));
+				
+				if (portefeuilleG.getTypePTF().equals("Client")) {
+					
+					nomClient= rs.getString("NAENT");
+					
+					ClientFinal clientFinal = new ClientFinal(nomClient);
+					
+					clientFinalDAO.insert(clientFinal);
+					
+					portefeuilleG.setClientFinal(clientFinal);
+				}
+				
+				
+			}
+			
+			insertWiseamPtf(portefeuilleG);
+			
+			PortefeuilleHistorique portefeuilleHistorique= portefeuilleHistoriqueDAO.findByPortefeuilleHistoriqueId(portefeuilleG);
+			
+			if (portefeuilleHistorique.getDateArchivage()==null) {
+				portefeuilleHistoriqueDAO.findVlDatePtfTopaze(portefeuilleG);;
+				
+			}else {
+				portefeuilleHistoriqueDAO.findVlDatePtfTopaze(portefeuilleG, portefeuilleHistorique);
 			}
 			rs.close();
 			ps.close();
@@ -154,4 +130,36 @@ public class PortefeuilleGDAO implements PortefeuilleGIDAO {
 			}
 		}
 	}
+	
+	@Transactional(value="txManagerWiseam",readOnly = false)
+	public float findVlPtfTopaze(PortefeuilleG portefeuilleG){
+
+	String sql = "select close FROM tw_price where nbins= ? and dapri= ?";
+
+	Connection conn = null;
+	
+	try {
+		conn = dataSourceTopaze.getConnection();
+		PreparedStatement ps = conn.prepareStatement(sql);
+		ps.setInt(1, portefeuilleG.getIdPortefG());
+		ps.setDate(2, portefeuilleG.getDanav());
+		float vl= 0;
+		ResultSet rs = ps.executeQuery();
+		if(rs.next()) {
+			vl = rs.getFloat("CLOSE");
+			}
+		
+		rs.close();
+		ps.close();
+		return vl;
+	} catch (SQLException e) {
+		throw new RuntimeException(e);
+	} finally {
+		if (conn != null) {
+			try {
+			conn.close();
+			} catch (SQLException e) {}
+		}
+	}
+}
 }

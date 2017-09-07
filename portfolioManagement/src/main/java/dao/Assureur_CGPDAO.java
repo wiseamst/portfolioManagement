@@ -6,6 +6,7 @@ public class Assureur_CGPDAO {
 
 	private HibernateTemplate hibernateWiseam;
 	private HibernateTemplate hibernateTopaze;
+	
 	public HibernateTemplate getHibernateWiseam() {
 		return hibernateWiseam;
 	}

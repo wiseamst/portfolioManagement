@@ -2,17 +2,13 @@ package model;
 
 import java.io.Serializable;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
@@ -40,16 +36,9 @@ public class ClientFinal implements Serializable{
 		this.dateDebutContrat = dateDebutContrat;
 	}
 
-	public ClientFinal(int idClient, String nom, String prenom, String coordonnees, String mail, String type,
-			Date dateDebutContrat) {
+	public ClientFinal(String nom) {
 		super();
-		this.idClient = idClient;
 		this.nom = nom;
-		this.prenom = prenom;
-		this.coordonnees = coordonnees;
-		this.mail = mail;
-		this.type = type;
-		this.dateDebutContrat = dateDebutContrat;
 	}
 
 	@Id

@@ -1,10 +1,7 @@
 package model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
@@ -30,14 +26,6 @@ public class CGP implements Serializable {
 	
 	public CGP(String nomSociete, String nomCGP, String coordonnees) {
 		super();
-		this.nomSociete = nomSociete;
-		this.nomCGP = nomCGP;
-		this.coordonnees = coordonnees;
-	}
-
-	public CGP(int idCGP, String nomSociete, String nomCGP, String coordonnees) {
-		super();
-		this.idCGP = idCGP;
 		this.nomSociete = nomSociete;
 		this.nomCGP = nomCGP;
 		this.coordonnees = coordonnees;

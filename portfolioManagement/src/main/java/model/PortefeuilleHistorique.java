@@ -2,12 +2,9 @@ package model;
 
 import java.io.Serializable;
 import java.sql.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -15,32 +12,40 @@ import javax.persistence.ManyToOne;
 @Entity
 public class PortefeuilleHistorique implements Serializable{
 
-	private int vl;
-	private int perf;
+	private float vl;
+	private float perf;
 	private Date dateArchivage;
 	
-	private Portefeuille portef;
+	private PortefeuilleG portef;
 
-	public PortefeuilleHistorique(int vl, int perf, Date dateArchivage) {
+
+	public PortefeuilleHistorique(Date dateArchivage, PortefeuilleG portef) {
+		super();
+		this.dateArchivage = dateArchivage;
+		this.portef = portef;
+	}
+
+	public PortefeuilleHistorique(float vl, Date dateArchivage, PortefeuilleG portef) {
 		super();
 		this.vl = vl;
-		this.perf = perf;
 		this.dateArchivage = dateArchivage;
+		this.portef = portef;
 	}
-	
+
 	@Column
-	public int getVl() {
+	public float getVl() {
 		return vl;
 	}
-	public void setVl(int vl) {
+	public void setVl(float vl) {
 		this.vl = vl;
 	}
 	
 	@Column
-	public int getPerf() {
+	public float getPerf() {
 		return perf;
 	}
-	public void setPerf(int perf) {
+
+	public void setPerf(float perf) {
 		this.perf = perf;
 	}
 	
@@ -49,6 +54,7 @@ public class PortefeuilleHistorique implements Serializable{
 	public Date getDateArchivage() {
 		return dateArchivage;
 	}
+
 	public void setDateArchivage(Date dateArchivage) {
 		this.dateArchivage = dateArchivage;
 	}
@@ -56,10 +62,10 @@ public class PortefeuilleHistorique implements Serializable{
 	@Id
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idPortefG", nullable = false)
-	public Portefeuille getPortef() {
+	public PortefeuilleG getPortef() {
 		return portef;
 	}
-	public void setPortef(Portefeuille portef) {
+	public void setPortef(PortefeuilleG portef) {
 		this.portef = portef;
 	}
 }

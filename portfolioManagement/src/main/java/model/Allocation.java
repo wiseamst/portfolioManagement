@@ -2,11 +2,9 @@ package model;
 
 import java.io.Serializable;
 import java.sql.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -15,23 +13,21 @@ import javax.persistence.ManyToOne;
 public class Allocation implements Serializable{
 
 	private Asset asset;
-	private Portefeuille portef;
+	private PortefeuilleG portef;
 	
 	private float qty;
 	private float poids;
 	private float prixAllocation;
 	private Date dateAllocation;
-	
-	public Allocation(float qty, float poids, float prixAllocation, Date dateAllocation) {
+
+	public Allocation(float qty, float poids, float prixAllocation) {
 		super();
 		this.qty = qty;
 		this.poids = poids;
 		this.prixAllocation = prixAllocation;
-		this.dateAllocation = dateAllocation;
 	}
-	
 
-    @Id
+	@Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idAsset")
 	public Asset getAsset() {
@@ -45,11 +41,11 @@ public class Allocation implements Serializable{
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idPortefG")
-	public Portefeuille getPortef() {
+	public PortefeuilleG getPortef() {
 		return portef;
 	}
 
-	public void setPortef(Portefeuille portef) {
+	public void setPortef(PortefeuilleG portef) {
 		this.portef = portef;
 	}
 
@@ -82,5 +78,4 @@ public class Allocation implements Serializable{
 		this.dateAllocation = dateAllocation;
 	}
     
-	
 }

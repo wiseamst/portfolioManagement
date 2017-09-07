@@ -2,13 +2,11 @@ package model;
 
 import java.io.Serializable;
 import java.sql.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -23,21 +21,9 @@ public class AllocationWecoHistorique implements Serializable {
 	
 	private PortefeuilleG ptfG;
 	
-	
 	public AllocationWecoHistorique(float facteursRisque, float pourcentagePTF, float pourcentageBench,
 			String commentaireWeco, Date dateWeco) {
 		super();
-		this.facteursRisque = facteursRisque;
-		this.pourcentagePTF = pourcentagePTF;
-		this.pourcentageBench = pourcentageBench;
-		this.commentaireWeco = commentaireWeco;
-		this.dateWeco = dateWeco;
-	}
-
-	public AllocationWecoHistorique(int idAllocWecoHist, float facteursRisque, float pourcentagePTF,
-			float pourcentageBench, String commentaireWeco, Date dateWeco) {
-		super();
-		this.idAllocWecoHist = idAllocWecoHist;
 		this.facteursRisque = facteursRisque;
 		this.pourcentagePTF = pourcentagePTF;
 		this.pourcentageBench = pourcentageBench;

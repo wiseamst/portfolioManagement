@@ -4,14 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
-
 import javax.sql.DataSource;
-
-import org.hibernate.SessionFactory;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.transaction.annotation.Transactional;
-
 import idao.AssetIDAO;
 import model.Asset;
 import model.AssetHistorique;
@@ -58,6 +53,56 @@ public class AssetDAO  implements AssetIDAO {
 	}
 
 	@Transactional(value="txManagerWiseam",readOnly = false)
+	public void findAllAssetTopaze(AssetHistoriqueDAO assetHistoriqueDAO){
+
+	String sql = "select NBINS,COINS,COCCY,ISIN,NAINS,TICKER,TYINS,TYCLA,COGEO from tw_instrument";
+
+	Connection conn = null;
+
+	try {
+		conn = dataSourceTopaze.getConnection();
+		PreparedStatement ps = conn.prepareStatement(sql);
+		Asset asset = null;
+		ResultSet rs = ps.executeQuery();
+		while(rs.next()) {
+			asset = new Asset(
+				rs.getInt("NBINS"),
+				rs.getString("COINS"),
+				rs.getString("ISIN"),
+				rs.getString("TICKER"),
+				rs.getString("COCCY"),
+				rs.getString("TYINS"),
+				rs.getString("NAINS"),
+				rs.getString("TYCLA"),
+				rs.getString("COGEO")
+			);
+			
+		insertWiseamAsset(asset);
+		
+		AssetHistorique assetHistorique= assetHistoriqueDAO.findByAssetHistoriqueId(asset);
+		
+		if (assetHistorique.getDateArchivage()==null) {
+			assetHistoriqueDAO.findPriceDateAssetTopaze(asset);
+			
+		}else {
+			assetHistoriqueDAO.findPriceDateAssetTopaze(asset, assetHistorique);
+		}
+		
+		}
+		rs.close();
+		ps.close();
+	} catch (SQLException e) {
+		throw new RuntimeException(e);
+	} finally {
+		if (conn != null) {
+			try {
+			conn.close();
+			} catch (SQLException e) {}
+		}
+	}
+}
+
+	@Transactional(value="txManagerWiseam",readOnly = false)
 	public void insertWiseamAsset(Asset asset) {
 		
 		Asset assetTemp = findPriceDateAssetTopaze(asset);
@@ -67,8 +112,6 @@ public class AssetDAO  implements AssetIDAO {
 			asset.setDateMAJ(assetTemp.getDateMAJ());
 		}
 		hibernateWiseam.saveOrUpdate(asset);
-		
-		
 		
 	}
 
@@ -87,7 +130,7 @@ public class AssetDAO  implements AssetIDAO {
 		ResultSet rs = ps.executeQuery();
 		if(rs.next()) {
 			assetTemp = new Asset(
-				rs.getFloat("CLOSE"), //ID ASSET
+				rs.getFloat("CLOSE"),
 				rs.getDate("DAPRI")
 			);
 		}
@@ -105,53 +148,4 @@ public class AssetDAO  implements AssetIDAO {
 	}
 }
 	
-	@Transactional(value="txManagerWiseam",readOnly = false)
-	public void findAllAssetTopaze(AssetHistoriqueDAO assetHistoriqueDAO){
-
-	String sql = "select NBINS,COINS,COCCY,ISIN,NAINS,TICKER,TYINS,TYCLA,COGEO from tw_instrument";
-
-	Connection conn = null;
-
-	try {
-		conn = dataSourceTopaze.getConnection();
-		PreparedStatement ps = conn.prepareStatement(sql);
-		Asset asset = null;
-		ResultSet rs = ps.executeQuery();
-		while(rs.next()) {
-			asset = new Asset(
-				rs.getInt("NBINS"), //ID ASSET
-				rs.getString("COINS"), //COINS
-				rs.getString("ISIN"), //ISIN
-				rs.getString("TICKER"), //TICKER
-				rs.getString("COCCY"), //DEVISE
-				rs.getString("TYINS"), //TYPE
-				rs.getString("NAINS"), //NOM
-				rs.getString("TYCLA"), //CLASS TYPE
-				rs.getString("COGEO") //ZONE
-			);
-			
-		insertWiseamAsset(asset);
-		
-/*		AssetHistorique assetHistorique= assetHistoriqueDAO.findByAssetHistoriqueId(asset);
-		
-		if (assetHistorique==null) {
-			assetHistoriqueDAO.findPriceDateAssetTopaze(asset);
-		}else {
-			assetHistoriqueDAO.findPriceDateAssetTopaze(asset, assetHistorique);
-		}
-		*/
-		}
-		rs.close();
-		ps.close();
-	} catch (SQLException e) {
-		throw new RuntimeException(e);
-	} finally {
-		if (conn != null) {
-			try {
-			conn.close();
-			} catch (SQLException e) {}
-		}
-	}
-}
-
 }

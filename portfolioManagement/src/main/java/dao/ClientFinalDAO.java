@@ -4,11 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import javax.sql.DataSource;
-
 import org.springframework.orm.hibernate5.HibernateTemplate;
-
+import org.springframework.transaction.annotation.Transactional;
 import idao.ClientFinalIDAO;
 import model.ClientFinal;
 
@@ -59,40 +57,11 @@ public class ClientFinalDAO implements  ClientFinalIDAO {
 		this.hibernateTopaze = hibernateTopaze;
 	}
 
-
+	@Transactional(value="txManagerWiseam",readOnly = false)
 	public void insert(ClientFinal clientFinal) {
-		// TODO Auto-generated method stub
+	
+		hibernateWiseam.saveOrUpdate(clientFinal);
 		
-	}
-
-	public void insertClientFinal(ClientFinal clientFinal){
-
-		String sql = "INSERT INTO CLIENTFINAL " +
-				"(NOM, PRENOM, COORDONNEES, MAIL, TYPE, DATEDEBUTCONTRAT)) VALUES (?, ?, ?, ?, ?, ?, ?)";
-		Connection conn = null;
-
-		try {
-			conn = dataSourceWiseam.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, clientFinal.getNom());
-			ps.setString(2, clientFinal.getPrenom());
-			ps.setString(3, clientFinal.getCoordonnees());
-			ps.setString(4, clientFinal.getMail());
-			ps.setString(5, clientFinal.getType());
-			ps.setDate(6, clientFinal.getDateDebutContrat());
-			ps.executeUpdate();
-			ps.close();
-
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {}
-			}
-		}
 	}
 
 	public ClientFinal findByClientFinalId(int clientId){

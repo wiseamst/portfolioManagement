@@ -2,11 +2,9 @@ package model;
 
 import java.io.Serializable;
 import java.sql.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
@@ -21,7 +19,7 @@ public class AllocationHistorique implements Serializable{
 	private Date dateArchivageAllocation;
 	
 	private Allocation allocation;
-	
+
 	public AllocationHistorique(float qty, float poids, float prixAllocation, Date dateArchivageAllocation) {
 		super();
 		this.qty = qty;
@@ -29,7 +27,7 @@ public class AllocationHistorique implements Serializable{
 		this.prixAllocation = prixAllocation;
 		this.dateArchivageAllocation = dateArchivageAllocation;
 	}
-
+	
 	@Column
 	public float getQty() {
 		return qty;
