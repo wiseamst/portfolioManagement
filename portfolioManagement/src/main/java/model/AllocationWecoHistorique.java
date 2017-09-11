@@ -31,6 +31,16 @@ public class AllocationWecoHistorique implements Serializable {
 		this.dateWeco = dateWeco;
 	}
 
+	public AllocationWecoHistorique(String commentaireWeco) {
+		super();
+		this.commentaireWeco = commentaireWeco;
+	}
+
+	public AllocationWecoHistorique() {
+		super();
+	}
+
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getIdAllocWecoHist() {
@@ -86,6 +96,13 @@ public class AllocationWecoHistorique implements Serializable {
 	}
 	public void setPtfG(PortefeuilleG ptfG) {
 		this.ptfG = ptfG;
+	}
+
+	@Override
+	public String toString() {
+		return "AllocationWecoHistorique [idAllocWecoHist=" + idAllocWecoHist + ", facteursRisque=" + facteursRisque
+				+ ", pourcentagePTF=" + pourcentagePTF + ", pourcentageBench=" + pourcentageBench + ", commentaireWeco="
+				+ commentaireWeco + ", dateWeco=" + dateWeco + "]";
 	}
 	
 }

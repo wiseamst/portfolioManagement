@@ -53,7 +53,7 @@ public class PortefeuilleHistoriqueDAO  implements PortefeuilleHistoriqueIDAO {
 	
 	public PortefeuilleHistorique findByPortefeuilleHistoriqueId(PortefeuilleG portefeuilleG){
 
-		String sql = "SELECT MAX(DATEARCHIVAGE) DATEARCHIVAGE FROM PORTEFEUILLEHISTORIQUE WHERE IDPORTEFG = ?";
+		String sql = "select max(datearchivage) datearchivage from portefeuillehistorique where idportefg = ?";
 
 		Connection conn = null;
 
@@ -86,8 +86,8 @@ public class PortefeuilleHistoriqueDAO  implements PortefeuilleHistoriqueIDAO {
 	@Transactional(value="txManagerWiseam",readOnly = false)
 	public void findVlDatePtfTopaze(PortefeuilleG portefeuilleG){
 
-	String sql = "SELECT x.nbins,x.dapri,x.close FROM tw_price x WHERE x.nbins=? and"
-			+ " x.dapri < ? ";
+	String sql = "select x.nbins,x.dapri,x.close from tw_price x where x.nbins=? and"
+			+ " x.dapri < ?  and x.dapri>='2017-08-01' order by x.dapri desc";
 
 	Connection conn = null;
 
@@ -95,7 +95,7 @@ public class PortefeuilleHistoriqueDAO  implements PortefeuilleHistoriqueIDAO {
 		conn = dataSourceTopaze.getConnection();
 		PreparedStatement ps = conn.prepareStatement(sql);
 		ps.setInt(1, portefeuilleG.getIdPortefG());
-		ps.setDate(1, portefeuilleG.getDanav());
+		ps.setDate(2, portefeuilleG.getDanav());
 		PortefeuilleHistorique portefeuilleHistorique = null;
 		ResultSet rs = ps.executeQuery();
 		while(rs.next()) {
@@ -126,8 +126,8 @@ public class PortefeuilleHistoriqueDAO  implements PortefeuilleHistoriqueIDAO {
 	@Transactional(value="txManagerWiseam",readOnly = false)
 	public void findVlDatePtfTopaze(PortefeuilleG portefeuilleG,PortefeuilleHistorique portefeuilleHistorique){
 
-	String sql = "SELECT x.nbins,x.dapri,x.close FROM tw_price x WHERE x.nbins= ? and"
-			+ " x.dapri < ? and x.dapri > ?";
+	String sql = "select x.nbins,x.dapri,x.close from tw_price x where x.nbins= ? and"
+			+ " x.dapri < ? and x.dapri > ? order by x.dapri desc";
 
 	Connection conn = null;
 	
@@ -167,7 +167,7 @@ public class PortefeuilleHistoriqueDAO  implements PortefeuilleHistoriqueIDAO {
 	@Transactional(value="txManagerWiseam",readOnly = false)
 	public float findPerfPtfTopaze(PortefeuilleHistorique portefeuilleHistorique){
 
-	String sql = "SELECT varet FROM tw_return WHERE nbins= ? and daret= ? ";
+	String sql = "select varet from tw_return where nbins= ? and daret= ? ";
 
 	Connection conn = null;
 	
@@ -198,6 +198,9 @@ public class PortefeuilleHistoriqueDAO  implements PortefeuilleHistoriqueIDAO {
 	
 	@Transactional(value="txManagerWiseam",readOnly = false)
 	public void insertWiseamPtfHist(PortefeuilleHistorique portefeuilleHistorique) {
+		
+		System.out.println(portefeuilleHistorique.toString());
+		
 		hibernateWiseam.saveOrUpdate(portefeuilleHistorique);
 		
 	}

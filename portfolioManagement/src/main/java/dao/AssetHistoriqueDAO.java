@@ -53,7 +53,7 @@ public class AssetHistoriqueDAO implements AssetHistoriqueIDAO {
 	
 	public AssetHistorique findByAssetHistoriqueId(Asset asset){
 
-		String sql = "SELECT MAX(DATEARCHIVAGE) DATEARCHIVAGE FROM ASSETHISTORIQUE WHERE IDASSET = ?";
+		String sql = "select max(datearchivage) datearchivage from assethistorique where idasset = ?";
 
 		Connection conn = null;
 
@@ -86,8 +86,8 @@ public class AssetHistoriqueDAO implements AssetHistoriqueIDAO {
 	@Transactional(value="txManagerWiseam",readOnly = false)
 	public void findPriceDateAssetTopaze(Asset asset){
 
-	String sql = "SELECT x.nbins,x.dapri,x.close FROM tw_price x WHERE x.nbins=? and"
-			+ " x.dapri < (SELECT max(y.dapri) FROM tw_price y WHERE x.nbins = y.nbins) ";
+	String sql = "select x.nbins,x.dapri,x.close from tw_price x where x.nbins=? and"
+			+ " x.dapri < (select max(y.dapri) from tw_price y where x.nbins = y.nbins) and x.dapri>='2017-07-01' order by x.dapri desc ";
 
 	Connection conn = null;
 
@@ -125,9 +125,9 @@ public class AssetHistoriqueDAO implements AssetHistoriqueIDAO {
 	@Transactional(value="txManagerWiseam",readOnly = false)
 	public void findPriceDateAssetTopaze(Asset asset,AssetHistorique assetHistorique){
 
-	String sql = "SELECT x.nbins,x.dapri,x.close FROM tw_price x WHERE x.nbins= ? and"
-			+ " x.dapri < (SELECT max(y.dapri) FROM tw_price y WHERE x.nbins = y.nbins) and"
-			+ " x.dapri > ?";
+	String sql = "select x.nbins,x.dapri,x.close from tw_price x where x.nbins= ? and"
+			+ " x.dapri < (select max(y.dapri) from tw_price y where x.nbins = y.nbins) and"
+			+ " x.dapri > ? order by x.dapri desc";
 
 	Connection conn = null;
 	
@@ -166,7 +166,7 @@ public class AssetHistoriqueDAO implements AssetHistoriqueIDAO {
 	@Transactional(value="txManagerWiseam",readOnly = false)
 	public float findPerfAssetTopaze(AssetHistorique assetHistorique){
 
-	String sql = "SELECT varet FROM tw_return WHERE nbins= ? and daret= ? ";
+	String sql = "select varet from tw_return where nbins= ? and daret= ? ";
 
 	Connection conn = null;
 	
@@ -197,6 +197,8 @@ public class AssetHistoriqueDAO implements AssetHistoriqueIDAO {
 	
 	@Transactional(value="txManagerWiseam",readOnly = false)
 	public void insertWiseamAssetHist(AssetHistorique assetHistorique) {
+		
+		System.out.println(assetHistorique.toString());
 		
 		hibernateWiseam.saveOrUpdate(assetHistorique);
 		

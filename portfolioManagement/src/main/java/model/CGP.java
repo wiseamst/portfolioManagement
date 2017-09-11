@@ -88,4 +88,10 @@ public class CGP implements Serializable {
 		this.set_clientF = set_clientF;
 	}
 
+	@Override
+	public String toString() {
+		return "CGP [idCGP=" + idCGP + ", nomSociete=" + nomSociete + ", nomCGP=" + nomCGP + ", coordonnees="
+				+ coordonnees + "]";
+	}
+	
 }

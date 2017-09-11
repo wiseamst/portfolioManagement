@@ -44,6 +44,10 @@ public class Asset implements Serializable {
 		this.dateMAJ = dateMAJ;
 	}
 
+	public Asset() {
+		super();
+	}
+
 	@Id
 	public int getIdAsset() {
 		return idAsset;
@@ -145,5 +149,11 @@ public class Asset implements Serializable {
 	public void setSetAlloc(Set<Allocation> setAlloc) {
 		this.setAlloc = setAlloc;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Asset [idAsset=" + idAsset + ", coins=" + coins + ", isin=" + isin + ", tickerBBG=" + tickerBBG
+				+ ", devise=" + devise + ", type=" + type + ", nom=" + nom + ", dernierPrix=" + dernierPrix
+				+ ", dateMAJ=" + dateMAJ + ", classType=" + classType + ", zone=" + zone + "]";
+	}
 }

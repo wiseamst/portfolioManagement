@@ -59,7 +59,7 @@ public class AssetHistorique implements Serializable{
 	
 	@Id
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "idAsset", nullable = false)
+	@JoinColumn(name = "idAsset")
 	public Asset getAsset() {
 		return asset;
 	}
@@ -67,4 +67,11 @@ public class AssetHistorique implements Serializable{
 	public void setAsset(Asset asset) {
 		this.asset = asset;
 	}
+
+	@Override
+	public String toString() {
+		return "AssetHistorique [perf=" + perf + ", dernierPrix=" + dernierPrix + ", dateArchivage=" + dateArchivage
+				+ "]";
+	}
+	
 }

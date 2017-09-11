@@ -27,6 +27,11 @@ public class Allocation implements Serializable{
 		this.prixAllocation = prixAllocation;
 	}
 
+	public Allocation() {
+		super();
+	}
+
+
 	@Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idAsset")
@@ -77,5 +82,12 @@ public class Allocation implements Serializable{
 	public void setDateAllocation(Date dateAllocation) {
 		this.dateAllocation = dateAllocation;
 	}
-    
+
+	@Override
+	public String toString() {
+		return "Allocation [asset=" + asset.getIdAsset() + ", portef=" + portef.getIdPortefG() + ", qty=" + qty + ", poids=" + poids
+				+ ", prixAllocation=" + prixAllocation + ", dateAllocation=" + dateAllocation + "]";
+	}
+	
+	
 }

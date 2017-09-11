@@ -8,6 +8,8 @@ import javax.sql.DataSource;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import idao.ClientFinalIDAO;
+import model.AllocationWecoHistorique;
+import model.Assureur;
 import model.ClientFinal;
 
 public class ClientFinalDAO implements  ClientFinalIDAO {
@@ -58,15 +60,28 @@ public class ClientFinalDAO implements  ClientFinalIDAO {
 	}
 
 	@Transactional(value="txManagerWiseam",readOnly = false)
-	public void insert(ClientFinal clientFinal) {
+	public void checkFictif() {
+		
+		ClientFinal clientFinal = hibernateWiseam.get(ClientFinal.class, 1);
+
+		if (clientFinal ==null) {
+			clientFinal = new ClientFinal("Fictif");
+			insertWiseamClient(clientFinal);
+		}
+	}
 	
+	@Transactional(value="txManagerWiseam",readOnly = false)
+	public void insertWiseamClient(ClientFinal clientFinal) {
+		
+		System.out.println(clientFinal.toString());
+		
 		hibernateWiseam.saveOrUpdate(clientFinal);
 		
 	}
 
 	public ClientFinal findByClientFinalId(int clientId){
 
-		String sql = "SELECT * FROM CLIENTFINAL WHERE IDCLIENT = ?";
+		String sql = "select * from clientfinal where idclient = ?";
 
 		Connection conn = null;
 

@@ -28,6 +28,15 @@ public class Assureur implements Serializable {
 		this.coordonnees = coordonnees;
 	}
 
+	public Assureur(String nomAssureur) {
+		super();
+		this.nomAssureur = nomAssureur;
+	}
+
+	public Assureur() {
+		super();
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getIdAssureur() {
@@ -71,6 +80,10 @@ public class Assureur implements Serializable {
 		this.set_ptfs = set_ptfs;
 	}
 
-	
+	@Override
+	public String toString() {
+		return "Assureur [idAssureur=" + idAssureur + ", nomAssureur=" + nomAssureur + ", coordonnees=" + coordonnees
+				+ "]";
+	}
 
 }

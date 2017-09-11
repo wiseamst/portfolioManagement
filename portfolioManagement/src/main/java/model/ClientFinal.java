@@ -41,6 +41,10 @@ public class ClientFinal implements Serializable{
 		this.nom = nom;
 	}
 
+	public ClientFinal() {
+		super();
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getIdClient() {
@@ -115,5 +119,11 @@ public class ClientFinal implements Serializable{
 	public void setSet_CGPs(Set<CGP> set_CGPs) {
 		this.set_CGPs = set_CGPs;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "ClientFinal [idClient=" + idClient + ", nom=" + nom + ", prenom=" + prenom + ", coordonnees="
+				+ coordonnees + ", mail=" + mail + ", type=" + type + ", dateDebutContrat=" + dateDebutContrat + "]";
+	}
+
 }

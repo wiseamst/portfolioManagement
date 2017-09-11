@@ -61,11 +61,16 @@ public class PortefeuilleHistorique implements Serializable{
 	
 	@Id
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "idPortefG", nullable = false)
+	@JoinColumn(name = "idPortefG")
 	public PortefeuilleG getPortef() {
 		return portef;
 	}
 	public void setPortef(PortefeuilleG portef) {
 		this.portef = portef;
+	}
+
+	@Override
+	public String toString() {
+		return "PortefeuilleHistorique [vl=" + vl + ", perf=" + perf + ", dateArchivage=" + dateArchivage + "]";
 	}
 }

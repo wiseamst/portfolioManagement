@@ -67,6 +67,10 @@ public class PortefeuilleG implements Serializable  {
 		this.idAR = idAR;
 	}
 	
+	public PortefeuilleG() {
+		super();
+	}
+
 	@Id
 	public int getIdPortefG() {
 		return idPortefG;
@@ -292,7 +296,7 @@ public class PortefeuilleG implements Serializable  {
 	}
 	
 	@ManyToOne
-	@JoinColumn(name = "idClient", nullable = false)
+	@JoinColumn(name = "idClient")
 	public ClientFinal getClientFinal() {
 		return clientFinal;
 	}
@@ -301,7 +305,7 @@ public class PortefeuilleG implements Serializable  {
 	}
 	
 	@ManyToOne
-	@JoinColumn(name = "idAssureur", nullable = false)
+	@JoinColumn(name = "idAssureur")
 	public Assureur getAssureur() {
 		return assureur;
 	}
@@ -318,7 +322,7 @@ public class PortefeuilleG implements Serializable  {
 		this.allWecoHist = allWecoHist;
 	}
 
-	@OneToMany(mappedBy = "portef", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "portef")
 	public Set<Allocation> getSetAlloc() {
 		return setAlloc;
 	}
@@ -326,5 +330,17 @@ public class PortefeuilleG implements Serializable  {
 	public void setSetAlloc(Set<Allocation> setAlloc) {
 		this.setAlloc = setAlloc;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "PortefeuilleG [idPortefG=" + idPortefG + ", nom=" + nom + ", numContrat=" + numContrat + ", devise="
+				+ devise + ", amnav=" + amnav + ", vl=" + vl + ", danav=" + danav + ", typePTF=" + typePTF
+				+ ", typeCTR=" + typeCTR + ", codom=" + codom + ", valorisateur=" + valorisateur + ", montantInitial="
+				+ montantInitial + ", bic=" + bic + ", iban=" + iban + ", dasta=" + dasta + ", dureeRecommandee="
+				+ dureeRecommandee + ", affectationResultat=" + affectationResultat + ", centralOrdre=" + centralOrdre
+				+ ", reglementLivraison=" + reglementLivraison + ", fraisEntree=" + fraisEntree + ", fraisSortie="
+				+ fraisSortie + ", FDGF=" + FDGF + ", FDGV=" + FDGV + ", commentaireGestion=" + commentaireGestion
+				+ ", niveauRisque=" + niveauRisque + ", isin=" + isin + ", idAR=" + idAR + ", arb=" + arb + "]";
+	}
+
 }

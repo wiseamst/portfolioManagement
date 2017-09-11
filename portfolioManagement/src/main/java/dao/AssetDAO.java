@@ -55,7 +55,7 @@ public class AssetDAO  implements AssetIDAO {
 	@Transactional(value="txManagerWiseam",readOnly = false)
 	public void findAllAssetTopaze(AssetHistoriqueDAO assetHistoriqueDAO){
 
-	String sql = "select NBINS,COINS,COCCY,ISIN,NAINS,TICKER,TYINS,TYCLA,COGEO from tw_instrument";
+	String sql = "select nbins,coins,coccy,isin,nains,ticker,tyins,tycla,cogeo from tw_instrument where nbins=2";
 
 	Connection conn = null;
 
@@ -111,6 +111,9 @@ public class AssetDAO  implements AssetIDAO {
 			asset.setDernierPrix(assetTemp.getDernierPrix());
 			asset.setDateMAJ(assetTemp.getDateMAJ());
 		}
+		
+		System.out.println(asset.toString());
+		
 		hibernateWiseam.saveOrUpdate(asset);
 		
 	}
@@ -119,7 +122,7 @@ public class AssetDAO  implements AssetIDAO {
 	@Transactional(value="txManagerWiseam",readOnly = false)
 	public Asset findPriceDateAssetTopaze(Asset asset){
 
-	String sql = "select X.DAPRI,X.CLOSE from tw_price X where X.NBINS = ? AND X.DAPRI = (select MAX(Y.dapri) from tw_price Y where X.nbins =Y.nbins )";
+	String sql = "select x.dapri,x.close from tw_price x where x.nbins = ? and x.dapri = (select max(y.dapri) from tw_price y where x.nbins =y.nbins )";
 	Connection conn = null;
 
 	try {

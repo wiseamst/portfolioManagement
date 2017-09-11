@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import controller.ServiceAllocation;
 import controller.ServiceAsset;
 import controller.ServicePortefeuille;
 import dao.AllocationDAO;
@@ -44,6 +45,7 @@ public class App {
             
             CGPDAO cGPDAO = (CGPDAO) context.getBean("cGPDAO");
            
+            
             ClientFinalDAO clientFinalDAO = (ClientFinalDAO) context.getBean("clientFinalDAO");
             
             PortefeuilleGDAO portefeuilleGDAO = (PortefeuilleGDAO) context.getBean("portefeuilleGDAO");
@@ -54,9 +56,16 @@ public class App {
             
             serviceAsset.findAllAssetTopaze();
             
-            ServicePortefeuille servicePortefeuille = new ServicePortefeuille(portefeuilleGDAO, portefeuilleHistoriqueDAO, clientFinalDAO);
+            ServicePortefeuille servicePortefeuille = new ServicePortefeuille(portefeuilleGDAO, portefeuilleHistoriqueDAO, clientFinalDAO , allocationWecoHistoriqueDAO, assureurDAO);
+            
+            servicePortefeuille.initAssociatedTables();
             
             servicePortefeuille.findAllPtfTopaze();
+            
+            ServiceAllocation serviceAllocation = new ServiceAllocation(allocationDAO,allocationHistoriqueDAO);
+
+            serviceAllocation.findAllAllocationTopaze();
+                
             
 		} catch (SQLException e) {
 			System.out.println("Connection down");

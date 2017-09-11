@@ -73,4 +73,10 @@ public class AllocationHistorique implements Serializable{
 	public void setAllocation(Allocation allocation) {
 		this.allocation = allocation;
 	}
+
+	@Override
+	public String toString() {
+		return "AllocationHistorique [qty=" + qty + ", poids=" + poids + ", prixAllocation=" + prixAllocation
+				+ ", dateArchivageAllocation=" + dateArchivageAllocation + "]";
+	}
 }

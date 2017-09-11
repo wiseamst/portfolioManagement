@@ -5,6 +5,7 @@ import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import idao.AllocationWecoHistoriqueIDAO;
 import model.AllocationWecoHistorique;
+import model.ClientFinal;
 
 public class AllocationWecoHistoriqueDAO implements  AllocationWecoHistoriqueIDAO {
 
@@ -47,7 +48,20 @@ public class AllocationWecoHistoriqueDAO implements  AllocationWecoHistoriqueIDA
 	}
 
 	@Transactional(value="txManagerWiseam",readOnly = false)
+	public void checkFictif() {
+		
+		AllocationWecoHistorique allocationWecoHistorique = hibernateWiseam.get(AllocationWecoHistorique.class, 1);
+		
+		if (allocationWecoHistorique ==null) {
+			allocationWecoHistorique = new AllocationWecoHistorique("Fictif");
+			insertWiseamWeco(allocationWecoHistorique);
+		}
+	}
+	
+	@Transactional(value="txManagerWiseam",readOnly = false)
 	public void insertWiseamWeco(AllocationWecoHistorique allocationWecoHistorique) {
+		
+		System.out.println(allocationWecoHistorique.toString());
 		
 		hibernateWiseam.saveOrUpdate(allocationWecoHistorique);
 	}

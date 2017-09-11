@@ -49,6 +49,8 @@ public class AllocationHistoriqueDAO implements  AllocationHistoriqueIDAO {
 	@Transactional(value="txManagerWiseam",readOnly = false)
 	public void insertWiseamAllocationHistorique(AllocationHistorique allocationHistorique) {
 		
+		System.out.println(allocationHistorique.toString());
+		
 		hibernateWiseam.saveOrUpdate(allocationHistorique);
 		
 	}

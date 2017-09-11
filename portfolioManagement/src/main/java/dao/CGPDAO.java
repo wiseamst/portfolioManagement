@@ -58,7 +58,7 @@ public class CGPDAO implements CGPIDAO {
 
 	public CGP findByCGPId(int cgpId){
 
-		String sql = "SELECT * FROM CGP WHERE IDCGP = ?";
+		String sql = "select * from cgp where idcgp = ?";
 
 		Connection conn = null;
 

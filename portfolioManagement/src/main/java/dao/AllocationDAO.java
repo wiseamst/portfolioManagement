@@ -64,13 +64,13 @@ public class AllocationDAO implements AllocationIDAO{
 			PreparedStatement ps = conn.prepareStatement(sql);
 			Allocation allocation = null;
 			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
+			if (rs.next()) {
 				allocation = new Allocation(
 					rs.getFloat("QTPOS"),
 					rs.getFloat("WGPOS"),
 					rs.getFloat("VAPOS")
-				);
-
+				);	
+			
 			PortefeuilleG portefeuilleTemp = hibernateWiseam.get(PortefeuilleG.class,rs.getInt("NBINS"));
 			Asset assetTemp = hibernateWiseam.get(Asset.class, rs.getInt("NBPOS"));
 
@@ -78,8 +78,10 @@ public class AllocationDAO implements AllocationIDAO{
 				
 				allocation.setAsset(assetTemp);
 				allocation.setPortef(portefeuilleTemp);
-			}
+				
 				insertWiseamAllocation(allocation);
+			}
+
 			}
 			
 			rs.close();
@@ -99,6 +101,8 @@ public class AllocationDAO implements AllocationIDAO{
 
 	@Transactional(value="txManagerWiseam",readOnly = false)
 	public void insertWiseamAllocation (Allocation allocation) {
+		
+		System.out.println(allocation.toString());
 		
 		hibernateWiseam.saveOrUpdate(allocation);
 

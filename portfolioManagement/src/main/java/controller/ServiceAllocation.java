@@ -15,6 +15,7 @@ public class ServiceAllocation {
 	}
 	
 	public void findAllAllocationTopaze() {
+		
 		allocationDAO.findAllAllocationTopaze();
 	}
 }

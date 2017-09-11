@@ -4,6 +4,7 @@ import javax.sql.DataSource;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import idao.AssureurIDAO;
+import model.AllocationWecoHistorique;
 import model.Assureur;
 
 public class AssureurDAO implements AssureurIDAO {
@@ -47,7 +48,21 @@ public class AssureurDAO implements AssureurIDAO {
 	}
 
 	@Transactional(value="txManagerWiseam",readOnly = false)
+	public void checkFictif() {
+		
+		Assureur assureur = hibernateWiseam.get(Assureur.class, 1);
+		
+		if (assureur ==null) {
+			assureur = new Assureur("Fictif");
+			insertWiseamAssureur(assureur);
+		}
+	}
+	
+	@Transactional(value="txManagerWiseam",readOnly = false)
 	public void insertWiseamAssureur(Assureur assureur) {
+		
+		System.out.println(assureur.toString());
+		
 		hibernateWiseam.saveOrUpdate(assureur);
 		
 	}

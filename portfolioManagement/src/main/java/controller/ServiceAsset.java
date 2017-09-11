@@ -10,7 +10,6 @@ public class ServiceAsset {
 	
     public ServiceAsset(AssetDAO assetDAO, AssetHistoriqueDAO assetHistoriqueDAO) {
 
-		
 		this.assetDAO = assetDAO;
 		this.assetHistoriqueDAO = assetHistoriqueDAO;
 	}
