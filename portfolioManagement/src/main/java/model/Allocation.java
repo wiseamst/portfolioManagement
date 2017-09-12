@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+//Mapping avec la table Allocation
+
 @Entity
 public class Allocation implements Serializable{
 
@@ -31,9 +33,8 @@ public class Allocation implements Serializable{
 		super();
 	}
 
-
 	@Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idAsset")
 	public Asset getAsset() {
 		return asset;
@@ -44,7 +45,7 @@ public class Allocation implements Serializable{
 	}
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idPortefG")
 	public PortefeuilleG getPortef() {
 		return portef;
@@ -88,6 +89,5 @@ public class Allocation implements Serializable{
 		return "Allocation [asset=" + asset.getIdAsset() + ", portef=" + portef.getIdPortefG() + ", qty=" + qty + ", poids=" + poids
 				+ ", prixAllocation=" + prixAllocation + ", dateAllocation=" + dateAllocation + "]";
 	}
-	
 	
 }

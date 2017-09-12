@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+//Mapping avec la table CGP
+
 @Entity
 public class CGP implements Serializable {
 
@@ -64,7 +66,7 @@ public class CGP implements Serializable {
 		this.coordonnees = coordonnees;
 	}
 	
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name="Assureur_CGP", 
 	 joinColumns=@JoinColumn(name="idCGP"),
 	 inverseJoinColumns=@JoinColumn(name="idAssureur"))
@@ -76,7 +78,7 @@ public class CGP implements Serializable {
 		this.set_assureurs = set_assureurs;
 	}
 	
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name="ClientFinal_CGP", 
 	 joinColumns=@JoinColumn(name="idCGP"),
 	 inverseJoinColumns=@JoinColumn(name="idClient"))
@@ -93,5 +95,5 @@ public class CGP implements Serializable {
 		return "CGP [idCGP=" + idCGP + ", nomSociete=" + nomSociete + ", nomCGP=" + nomCGP + ", coordonnees="
 				+ coordonnees + "]";
 	}
-	
+
 }

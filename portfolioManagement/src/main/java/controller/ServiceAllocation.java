@@ -14,8 +14,10 @@ public class ServiceAllocation {
 		this.allocationHistoriqueDAO = allocationHistoriqueDAO;
 	}
 	
+	// Daily Integration
 	public void findAllAllocationTopaze() {
 		
 		allocationDAO.findAllAllocationTopaze();
+	    //allocationDAO.findAllAllocationTopaze(allocationHistoriqueDAO);
 	}
 }

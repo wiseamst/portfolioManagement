@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+//Mapping avec la table Asset
+
 @Entity
 public class Asset implements Serializable {
 
@@ -156,4 +158,5 @@ public class Asset implements Serializable {
 				+ ", devise=" + devise + ", type=" + type + ", nom=" + nom + ", dernierPrix=" + dernierPrix
 				+ ", dateMAJ=" + dateMAJ + ", classType=" + classType + ", zone=" + zone + "]";
 	}
+	
 }

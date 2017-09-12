@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+//Mapping avec la table AssetHistorique
+
 @Entity
 public class AssetHistorique implements Serializable{
 	
@@ -58,7 +60,7 @@ public class AssetHistorique implements Serializable{
 	}
 	
 	@Id
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "idAsset")
 	public Asset getAsset() {
 		return asset;
@@ -71,7 +73,7 @@ public class AssetHistorique implements Serializable{
 	@Override
 	public String toString() {
 		return "AssetHistorique [perf=" + perf + ", dernierPrix=" + dernierPrix + ", dateArchivage=" + dateArchivage
-				+ "]";
+				+ ", asset=" + asset.getIdAsset() + "]";
 	}
-	
+
 }

@@ -14,10 +14,10 @@ public class ServiceAsset {
 		this.assetHistoriqueDAO = assetHistoriqueDAO;
 	}
     
+	// Daily Integration
 	public void findAllAssetTopaze () {
 		
 		assetDAO.findAllAssetTopaze(assetHistoriqueDAO);
-
 	}
 
 }

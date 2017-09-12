@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 
+//Mapping avec la table AllocationHistorique
+
 @Entity
 public class AllocationHistorique implements Serializable{
 	
@@ -62,7 +64,7 @@ public class AllocationHistorique implements Serializable{
 	}
 	
     @Id
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumns({
 		@JoinColumn(name = "idAsset"),
 		@JoinColumn(name = "idPortefG") })
@@ -77,6 +79,7 @@ public class AllocationHistorique implements Serializable{
 	@Override
 	public String toString() {
 		return "AllocationHistorique [qty=" + qty + ", poids=" + poids + ", prixAllocation=" + prixAllocation
-				+ ", dateArchivageAllocation=" + dateArchivageAllocation + "]";
+				+ ", dateArchivageAllocation=" + dateArchivageAllocation + ",asset=" + allocation.getAsset().getIdAsset() + ", portef=" + allocation.getPortef().getIdPortefG() + "]";
 	}
+
 }

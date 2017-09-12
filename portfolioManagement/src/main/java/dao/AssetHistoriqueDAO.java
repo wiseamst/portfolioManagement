@@ -13,16 +13,15 @@ import model.AssetHistorique;
 
 public class AssetHistoriqueDAO implements AssetHistoriqueIDAO {
 
-	private DataSource dataSourceTopaze;
-	private DataSource dataSourceWiseam;
+	private DataSource dataSourceTopaze; // to read from topaze
+	private DataSource dataSourceWiseam; // to read from wiseam
 	
-	private HibernateTemplate hibernateWiseam;
-	private HibernateTemplate hibernateTopaze;
+	private HibernateTemplate hibernateWiseam; // to read from wiseam using hibernate template
+	private HibernateTemplate hibernateTopaze; // to read from topaze using hibernate template
 	
 	public DataSource getDataSourceTopaze() {
 		return dataSourceTopaze;
 	}
-	
 	public void setDataSourceTopaze(DataSource dataSourceTopaze) {
 		this.dataSourceTopaze = dataSourceTopaze;
 	}
@@ -30,7 +29,6 @@ public class AssetHistoriqueDAO implements AssetHistoriqueIDAO {
 	public DataSource getDataSourceWiseam() {
 		return dataSourceWiseam;
 	}
-
 	public void setDataSourceWiseam(DataSource dataSourceWiseam) {
 		this.dataSourceWiseam = dataSourceWiseam;
 	}
@@ -38,7 +36,6 @@ public class AssetHistoriqueDAO implements AssetHistoriqueIDAO {
 	public HibernateTemplate getHibernateWiseam() {
 		return hibernateWiseam;
 	}
-
 	public void setHibernateWiseam(HibernateTemplate hibernateWiseam) {
 		this.hibernateWiseam = hibernateWiseam;
 	}
@@ -46,11 +43,11 @@ public class AssetHistoriqueDAO implements AssetHistoriqueIDAO {
 	public HibernateTemplate getHibernateTopaze() {
 		return hibernateTopaze;
 	}
-
 	public void setHibernateTopaze(HibernateTemplate hibernateTopaze) {
 		this.hibernateTopaze = hibernateTopaze;
 	}
 	
+	@Transactional(value="txManagerWiseam",readOnly = false)
 	public AssetHistorique findByAssetHistoriqueId(Asset asset){
 
 		String sql = "select max(datearchivage) datearchivage from assethistorique where idasset = ?";
@@ -99,7 +96,7 @@ public class AssetHistoriqueDAO implements AssetHistoriqueIDAO {
 		ResultSet rs = ps.executeQuery();
 		while(rs.next()) {
 			assetHistorique = new AssetHistorique(
-					rs.getFloat("CLOSE"), //ID ASSET
+					rs.getFloat("CLOSE"),
 					rs.getDate("DAPRI"),
 					asset
 				);
@@ -140,7 +137,7 @@ public class AssetHistoriqueDAO implements AssetHistoriqueIDAO {
 		ResultSet rs = ps.executeQuery();
 		while(rs.next()) {
 			assetHistoriqueTemp = new AssetHistorique(
-				rs.getFloat("CLOSE"), //ID ASSET
+				rs.getFloat("CLOSE"),
 				rs.getDate("DAPRI"),
 				asset
 			);

@@ -1,11 +1,17 @@
 package mainApp;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
+import java.text.ParseException;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.dao.DataAccessException;
 
 import controller.ServiceAllocation;
+import controller.ServiceAllocationWeco;
 import controller.ServiceAsset;
 import controller.ServicePortefeuille;
 import dao.AllocationDAO;
@@ -21,16 +27,20 @@ import dao.PortefeuilleHistoriqueDAO;
 
 public class App {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws DataAccessException, ParseException {
  
 		try {
 			
+			//Connection avec Topaze
 			Connection con = DriverManager.getConnection("jdbc:mysql://ns300088.ovh.net/topazeweb","wiseam","top2017aze!");
-			System.out.println("Connection up");
+			
+			System.out.println("Connection avec Topaze up");
 		
+			//Appel fichier de configuration springs
     	    ApplicationContext context = new ClassPathXmlApplicationContext("spring/Spring-Module.xml");
     	
-         
+    	    //Chargement des beans Spring
+    	    //Un  bean dao pour chaque entité
             AssetDAO assetDAO = (AssetDAO) context.getBean("assetDAO");
             
             AssetHistoriqueDAO assetHistoriqueDAO = (AssetHistoriqueDAO) context.getBean("assetHistoriqueDAO");
@@ -45,27 +55,33 @@ public class App {
             
             CGPDAO cGPDAO = (CGPDAO) context.getBean("cGPDAO");
            
-            
             ClientFinalDAO clientFinalDAO = (ClientFinalDAO) context.getBean("clientFinalDAO");
             
             PortefeuilleGDAO portefeuilleGDAO = (PortefeuilleGDAO) context.getBean("portefeuilleGDAO");
             
             PortefeuilleHistoriqueDAO portefeuilleHistoriqueDAO = (PortefeuilleHistoriqueDAO) context.getBean("portefeuilleHistoriqueDAO");
             
+            
+            //Création des services
+            
             ServiceAsset serviceAsset = new ServiceAsset(assetDAO,assetHistoriqueDAO);
+
+            serviceAsset.findAllAssetTopaze();//Chargement des assets
             
-            serviceAsset.findAllAssetTopaze();
+
+            ServicePortefeuille servicePortefeuille = new ServicePortefeuille(portefeuilleGDAO, portefeuilleHistoriqueDAO, clientFinalDAO, assureurDAO);
             
-            ServicePortefeuille servicePortefeuille = new ServicePortefeuille(portefeuilleGDAO, portefeuilleHistoriqueDAO, clientFinalDAO , allocationWecoHistoriqueDAO, assureurDAO);
+            servicePortefeuille.initAssociatedTables();//chargement fictif Client + Assueur ( id=1)
             
-            servicePortefeuille.initAssociatedTables();
-            
-            servicePortefeuille.findAllPtfTopaze();
+            servicePortefeuille.findAllPtfTopaze();//Chargement des portefeuilles + portefeuilles hist
             
             ServiceAllocation serviceAllocation = new ServiceAllocation(allocationDAO,allocationHistoriqueDAO);
 
-            serviceAllocation.findAllAllocationTopaze();
-                
+            serviceAllocation.findAllAllocationTopaze();//Chargement des allocs
+
+            ServiceAllocationWeco serviceAllocationWeco = new ServiceAllocationWeco(allocationWecoHistoriqueDAO);
+            
+            serviceAllocationWeco.findAllWeco();//Chargement des wecos
             
 		} catch (SQLException e) {
 			System.out.println("Connection down");
@@ -75,17 +91,3 @@ public class App {
 	}
 
 }
-
-
-/*
- * Configuration configuration = new Configuration();
- * configuration = configuration.configure("database/hibernate.cfg.xml");
- * SessionFactory factory = configuration.buildSessionFactory();
- * */
-
-
-/*
- * AssureurDAO assureurDAO = (AssureurDAO) context.getBean("assureurDAO");
- * Assureur assureur = assureurDAO.findByAssureurTopaze(121);
- * assureurDAO.insert(new Assureur(assureur.getCoordonnees(),assureur.getNomAssureur()));
- * */

@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+//Mapping avec la table PortefeuilleHistorique
+
 @Entity
 public class PortefeuilleHistorique implements Serializable{
 
@@ -71,6 +73,8 @@ public class PortefeuilleHistorique implements Serializable{
 
 	@Override
 	public String toString() {
-		return "PortefeuilleHistorique [vl=" + vl + ", perf=" + perf + ", dateArchivage=" + dateArchivage + "]";
+		return "PortefeuilleHistorique [vl=" + vl + ", perf=" + perf + ", dateArchivage=" + dateArchivage + ", portef="
+				+ portef.getIdPortefG() + "]";
 	}
+
 }

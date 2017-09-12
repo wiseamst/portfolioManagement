@@ -4,12 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.List;
 import javax.sql.DataSource;
+import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import idao.PortefeuilleGIDAO;
-import model.AllocationWecoHistorique;
-import model.Asset;
 import model.Assureur;
 import model.ClientFinal;
 import model.PortefeuilleG;
@@ -17,16 +18,15 @@ import model.PortefeuilleHistorique;
 
 public class PortefeuilleGDAO implements PortefeuilleGIDAO {
 
-	private DataSource dataSourceTopaze;
-	private DataSource dataSourceWiseam;
+	private DataSource dataSourceTopaze; // to read from topaze
+	private DataSource dataSourceWiseam; // to read from wiseam
 	
-	private HibernateTemplate hibernateWiseam;
-	private HibernateTemplate hibernateTopaze;
+	private HibernateTemplate hibernateWiseam; // to read from wiseam using hibernate template
+	private HibernateTemplate hibernateTopaze; // to read from topaze using hibernate template
 	
 	public DataSource getDataSourceTopaze() {
 		return dataSourceTopaze;
 	}
-
 	public void setDataSourceTopaze(DataSource dataSourceTopaze) {
 		this.dataSourceTopaze = dataSourceTopaze;
 	}
@@ -34,7 +34,6 @@ public class PortefeuilleGDAO implements PortefeuilleGIDAO {
 	public DataSource getDataSourceWiseam() {
 		return dataSourceWiseam;
 	}
-
 	public void setDataSourceWiseam(DataSource dataSourceWiseam) {
 		this.dataSourceWiseam = dataSourceWiseam;
 	}
@@ -42,7 +41,6 @@ public class PortefeuilleGDAO implements PortefeuilleGIDAO {
 	public HibernateTemplate getHibernateWiseam() {
 		return hibernateWiseam;
 	}
-
 	public void setHibernateWiseam(HibernateTemplate hibernateWiseam) {
 		this.hibernateWiseam = hibernateWiseam;
 	}
@@ -50,7 +48,6 @@ public class PortefeuilleGDAO implements PortefeuilleGIDAO {
 	public HibernateTemplate getHibernateTopaze() {
 		return hibernateTopaze;
 	}
-
 	public void setHibernateTopaze(HibernateTemplate hibernateTopaze) {
 		this.hibernateTopaze = hibernateTopaze;
 	}
@@ -64,7 +61,7 @@ public class PortefeuilleGDAO implements PortefeuilleGIDAO {
 	}
 	
 	@Transactional(value="txManagerWiseam",readOnly = false)
-	public void findAllPtfTopaze(PortefeuilleHistoriqueDAO portefeuilleHistoriqueDAO,ClientFinalDAO clientFinalDAO ,AllocationWecoHistoriqueDAO allocationWecoHistoriqueDAO,AssureurDAO assureurDAO){
+	public void findAllPtfTopaze(PortefeuilleHistoriqueDAO portefeuilleHistoriqueDAO,ClientFinalDAO clientFinalDAO,AssureurDAO assureurDAO) throws DataAccessException, ParseException{
 
 		String sql = "select nbins,amnav,if(dasta = '0000-00-00', null, dasta) as dasta,if(danav = '0000-00-00', null, danav) as danav,codom,coccy,tyctr,tyent,naent,coent,nbben,isin from  tw_portfolio where nbins=46";
 
@@ -92,9 +89,9 @@ public class PortefeuilleGDAO implements PortefeuilleGIDAO {
 						);
 				
 				if (portefeuilleG.getIdAR()!=0) {
-					portefeuilleG.setArb(true);
+					portefeuilleG.setArb(true); // if ptf is related to benchmark set Arb to true
 				}else {
-					portefeuilleG.setArb(false);
+					portefeuilleG.setArb(false); // if not
 				}
 
 				portefeuilleG.setVl(findVlPtfTopaze(portefeuilleG));
@@ -105,30 +102,36 @@ public class PortefeuilleGDAO implements PortefeuilleGIDAO {
 					
 					ClientFinal clientFinal = new ClientFinal(nomClient);
 					
-					clientFinalDAO.insertWiseamClient(clientFinal);
+					List<ClientFinal> clients = findWiseamClientByName(nomClient); // check client existence
 					
+					if (clients.size()>0) {
+						clientFinal=clients.get(0); // client already exists
+					}	
+					
+					clientFinalDAO.insertWiseamClient(clientFinal); //Create new client type if ptf is client
+					
+					portefeuilleG.setClientFinal(clientFinal);
+				}else {
+					
+					ClientFinal clientFinal = hibernateWiseam.get(ClientFinal.class, 1); // if it is not a client set the idclient to 1 ( fictif)
 					portefeuilleG.setClientFinal(clientFinal);
 				}
-				
-					ClientFinal clientFinal = hibernateWiseam.get(ClientFinal.class, 1);
+				    PortefeuilleG portefeuilleGTemp = hibernateWiseam.get(PortefeuilleG.class, portefeuilleG.getIdPortefG());
 					
-					Assureur assureur = hibernateWiseam.get(Assureur.class, 1);
-					
-					AllocationWecoHistorique allocationWecoHistorique = hibernateWiseam.get(AllocationWecoHistorique.class, 1);
-					
-					portefeuilleG.setClientFinal(clientFinal);
-					portefeuilleG.setAssureur(assureur);
-					portefeuilleG.setAllWecoHist(allocationWecoHistorique);
-					
-					insertWiseamPtf(portefeuilleG);
+				    if (portefeuilleGTemp!=null && portefeuilleGTemp.getAssureur().getIdAssureur()==1 || portefeuilleGTemp==null) {
+					    Assureur assureur = hibernateWiseam.get(Assureur.class, 1); // set the idassureur to 1 (fictif)
+						portefeuilleG.setAssureur(assureur);
+				    }
+							
+					insertWiseamPtf(portefeuilleG); // insert line by line ptf
 				
 					PortefeuilleHistorique portefeuilleHistorique= portefeuilleHistoriqueDAO.findByPortefeuilleHistoriqueId(portefeuilleG);
 					
 					if (portefeuilleHistorique.getDateArchivage()==null) {
-						portefeuilleHistoriqueDAO.findVlDatePtfTopaze(portefeuilleG);
+						portefeuilleHistoriqueDAO.findVlDatePtfTopaze(portefeuilleG);  // no line into hist for this ptf
 						
 					}else {
-						portefeuilleHistoriqueDAO.findVlDatePtfTopaze(portefeuilleG, portefeuilleHistorique);
+						portefeuilleHistoriqueDAO.findVlDatePtfTopaze(portefeuilleG, portefeuilleHistorique); // already line into hist for this ptf
 					}
 				
 			}
@@ -174,5 +177,14 @@ public class PortefeuilleGDAO implements PortefeuilleGIDAO {
 			} catch (SQLException e) {}
 		}
 	}
-}
+	
+}	
+	@Transactional(value="txManagerWiseam",readOnly = false)
+	public List<ClientFinal> findWiseamClientByName(String nomClient) {
+		
+		Object[] params = new Object[]{nomClient};
+		return(List<ClientFinal>) hibernateWiseam.find("select r from ClientFinal r where r.nom=?",params);
+
+	}
+
 }

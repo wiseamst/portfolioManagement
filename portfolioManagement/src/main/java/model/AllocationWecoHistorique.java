@@ -4,30 +4,33 @@ import java.io.Serializable;
 import java.sql.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+//Mapping avec la table AllocationWecoHistorique
 
 @Entity
 public class AllocationWecoHistorique implements Serializable {
 
 	private int idAllocWecoHist;
-	private float facteursRisque;
+	private String facteursRisque;
 	private float pourcentagePTF;
 	private float pourcentageBench;
 	private String commentaireWeco;
 	private Date dateWeco;
 	
 	private PortefeuilleG ptfG;
-	
-	public AllocationWecoHistorique(float facteursRisque, float pourcentagePTF, float pourcentageBench,
-			String commentaireWeco, Date dateWeco) {
+
+	public AllocationWecoHistorique(String facteursRisque, float pourcentagePTF, float pourcentageBench,
+			Date dateWeco) {
 		super();
 		this.facteursRisque = facteursRisque;
 		this.pourcentagePTF = pourcentagePTF;
 		this.pourcentageBench = pourcentageBench;
-		this.commentaireWeco = commentaireWeco;
 		this.dateWeco = dateWeco;
 	}
 
@@ -51,10 +54,11 @@ public class AllocationWecoHistorique implements Serializable {
 	}
 	
 	@Column
-	public float getFacteursRisque() {
+	public String getFacteursRisque() {
 		return facteursRisque;
 	}
-	public void setFacteursRisque(float facteursRisque) {
+
+	public void setFacteursRisque(String facteursRisque) {
 		this.facteursRisque = facteursRisque;
 	}
 	
@@ -62,6 +66,7 @@ public class AllocationWecoHistorique implements Serializable {
 	public float getPourcentagePTF() {
 		return pourcentagePTF;
 	}
+
 	public void setPourcentagePTF(float pourcentagePTF) {
 		this.pourcentagePTF = pourcentagePTF;
 	}
@@ -90,7 +95,8 @@ public class AllocationWecoHistorique implements Serializable {
 		this.dateWeco = dateWeco;
 	}
 	
-	@OneToOne(mappedBy="allWecoHist")
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "idPortefG")
 	public PortefeuilleG getPtfG() {
 		return ptfG;
 	}
@@ -102,7 +108,7 @@ public class AllocationWecoHistorique implements Serializable {
 	public String toString() {
 		return "AllocationWecoHistorique [idAllocWecoHist=" + idAllocWecoHist + ", facteursRisque=" + facteursRisque
 				+ ", pourcentagePTF=" + pourcentagePTF + ", pourcentageBench=" + pourcentageBench + ", commentaireWeco="
-				+ commentaireWeco + ", dateWeco=" + dateWeco + "]";
+				+ commentaireWeco + ", dateWeco=" + dateWeco + ", ptfG=" + ptfG.getIdPortefG() + "]";
 	}
-	
+
 }

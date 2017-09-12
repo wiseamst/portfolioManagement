@@ -14,16 +14,15 @@ import model.PortefeuilleG;
 
 public class AllocationDAO implements AllocationIDAO{
 
-	private DataSource dataSourceTopaze;
-	private DataSource dataSourceWiseam;
+	private DataSource dataSourceTopaze; // to read from topaze
+	private DataSource dataSourceWiseam; // to read from wiseam
 	
-	private HibernateTemplate hibernateWiseam;
-	private HibernateTemplate hibernateTopaze;
+	private HibernateTemplate hibernateWiseam; // to read from wiseam using hibernate template
+	private HibernateTemplate hibernateTopaze; // to read from topaze using hibernate template
 	
 	public DataSource getDataSourceTopaze() {
 		return dataSourceTopaze;
 	}
-
 	public void setDataSourceTopaze(DataSource dataSourceTopaze) {
 		this.dataSourceTopaze = dataSourceTopaze;
 	}
@@ -31,11 +30,13 @@ public class AllocationDAO implements AllocationIDAO{
 	public DataSource getDataSourceWiseam() {
 		return dataSourceWiseam;
 	}
-
+	public void setDataSourceWiseam(DataSource dataSourceWiseam) {
+		this.dataSourceWiseam = dataSourceWiseam;
+	}
+	
 	public HibernateTemplate getHibernateWiseam() {
 		return hibernateWiseam;
 	}
-
 	public void setHibernateWiseam(HibernateTemplate hibernateWiseam) {
 		this.hibernateWiseam = hibernateWiseam;
 	}
@@ -43,13 +44,8 @@ public class AllocationDAO implements AllocationIDAO{
 	public HibernateTemplate getHibernateTopaze() {
 		return hibernateTopaze;
 	}
-
 	public void setHibernateTopaze(HibernateTemplate hibernateTopaze) {
 		this.hibernateTopaze = hibernateTopaze;
-	}
-
-	public void setDataSourceWiseam(DataSource dataSourceWiseam) {
-		this.dataSourceWiseam = dataSourceWiseam;
 	}
 
 	@Transactional(value="txManagerWiseam",readOnly = false)

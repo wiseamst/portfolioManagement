@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+//Mapping avec la table ClientFinal
+
 @Entity
 public class ClientFinal implements Serializable{
 
@@ -102,7 +104,7 @@ public class ClientFinal implements Serializable{
 		this.dateDebutContrat = dateDebutContrat;
 	}
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "clientFinal")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "clientFinal")
 	public Set<PortefeuilleG> getSet_ptfs() {
 		return set_ptfs;
 	}
@@ -111,7 +113,7 @@ public class ClientFinal implements Serializable{
 		this.set_ptfs = set_ptfs;
 	}
 	
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "set_clientF")
+	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "set_clientF")
 	public Set<CGP> getSet_CGPs() {
 		return set_CGPs;
 	}
@@ -125,5 +127,5 @@ public class ClientFinal implements Serializable{
 		return "ClientFinal [idClient=" + idClient + ", nom=" + nom + ", prenom=" + prenom + ", coordonnees="
 				+ coordonnees + ", mail=" + mail + ", type=" + type + ", dateDebutContrat=" + dateDebutContrat + "]";
 	}
-
+	
 }

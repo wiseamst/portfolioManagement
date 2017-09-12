@@ -3,15 +3,14 @@ package model;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+
+//Mapping avec la table PortefeuilleG
 
 @Entity
 public class PortefeuilleG implements Serializable  {
@@ -48,7 +47,6 @@ public class PortefeuilleG implements Serializable  {
 	
 	private ClientFinal clientFinal;
 	private Assureur assureur;
-	private AllocationWecoHistorique allWecoHist;
 	private Set<Allocation> setAlloc;
 	
 	public PortefeuilleG(int idPortefG, String nom, String devise, float amnav, Date danav, String typePTF,
@@ -67,6 +65,24 @@ public class PortefeuilleG implements Serializable  {
 		this.idAR = idAR;
 	}
 	
+	
+	public PortefeuilleG(int idPortefG, String nom, String numContrat, String devise, float amnav, Date danav,
+			String typePTF, String typeCTR, String codom, Date dasta, String isin, int idAR) {
+		super();
+		this.idPortefG = idPortefG;
+		this.nom = nom;
+		this.numContrat = numContrat;
+		this.devise = devise;
+		this.amnav = amnav;
+		this.danav = danav;
+		this.typePTF = typePTF;
+		this.typeCTR = typeCTR;
+		this.codom = codom;
+		this.dasta = dasta;
+		this.isin = isin;
+		this.idAR = idAR;
+	}
+
 	public PortefeuilleG() {
 		super();
 	}
@@ -313,14 +329,6 @@ public class PortefeuilleG implements Serializable  {
 		this.assureur = assureur;
 	}
 	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name = "idAllocWecoHist")
-	public AllocationWecoHistorique getAllWecoHist() {
-		return allWecoHist;
-	}
-	public void setAllWecoHist(AllocationWecoHistorique allWecoHist) {
-		this.allWecoHist = allWecoHist;
-	}
 
 	@OneToMany(mappedBy = "portef")
 	public Set<Allocation> getSetAlloc() {
@@ -331,6 +339,7 @@ public class PortefeuilleG implements Serializable  {
 		this.setAlloc = setAlloc;
 	}
 
+
 	@Override
 	public String toString() {
 		return "PortefeuilleG [idPortefG=" + idPortefG + ", nom=" + nom + ", numContrat=" + numContrat + ", devise="
@@ -340,7 +349,8 @@ public class PortefeuilleG implements Serializable  {
 				+ dureeRecommandee + ", affectationResultat=" + affectationResultat + ", centralOrdre=" + centralOrdre
 				+ ", reglementLivraison=" + reglementLivraison + ", fraisEntree=" + fraisEntree + ", fraisSortie="
 				+ fraisSortie + ", FDGF=" + FDGF + ", FDGV=" + FDGV + ", commentaireGestion=" + commentaireGestion
-				+ ", niveauRisque=" + niveauRisque + ", isin=" + isin + ", idAR=" + idAR + ", arb=" + arb + "]";
+				+ ", niveauRisque=" + niveauRisque + ", isin=" + isin + ", idAR=" + idAR + ", arb=" + arb
+				+ ", clientFinal=" + clientFinal.getIdClient() + ", assureur=" + assureur.getIdAssureur() + "]";
 	}
 
 }

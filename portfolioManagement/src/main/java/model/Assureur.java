@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+//Mapping avec la table Assureur
+
 @Entity
 public class Assureur implements Serializable {
 
@@ -62,7 +64,7 @@ public class Assureur implements Serializable {
 		this.coordonnees = coordonnees;
 	}
 	
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "set_assureurs")
+	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "set_assureurs")
 	public Set<CGP> getSet_CGPs() {
 		return set_CGPs;
 	}
@@ -71,7 +73,7 @@ public class Assureur implements Serializable {
 		this.set_CGPs = set_CGPs;
 	}
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "assureur")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "assureur")
 	public Set<PortefeuilleG> getSet_ptfs() {
 		return set_ptfs;
 	}
