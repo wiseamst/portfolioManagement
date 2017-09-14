@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -69,7 +70,7 @@ public class AllocationWecoHistoriqueDAO implements  AllocationWecoHistoriqueIDA
 	public boolean readFromWeco(PortefeuilleG portefeuilleG) throws ParseException {
 		
 		// file name will change depending on ptf and client
-		String FILE_NAME = "C:\\Users\\stagiaire4\\Desktop\\WECO_V1 2017 10 31.xls";
+		String FILE_NAME = "C:\\Users\\stagiaire4\\Desktop\\WECO_V1 2017 10 30.xls";
 		
 		 try {
 			 
@@ -93,7 +94,7 @@ public class AllocationWecoHistoriqueDAO implements  AllocationWecoHistoriqueIDA
 		           
 				java.sql.Date date_d = new java.sql.Date(sdf.parse(date).getTime()); 
                		
-				List<AllocationWecoHistorique> wecos =  findWiseamWecoByPtf(portefeuilleG);
+				List<AllocationWecoHistorique> wecos =  findWiseamWecoByPtf(portefeuilleG,date_d);
 
 		        FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
 		        
@@ -101,7 +102,7 @@ public class AllocationWecoHistoriqueDAO implements  AllocationWecoHistoriqueIDA
 		           
 		        Sheet datatypeSheet = workbook.getSheetAt(0);
 
-	            for (int j=6; j< 10 + 1; j++) {
+	            for (int j=6; j< 13 + 1; j++) {
 	            	
 	            	AllocationWecoHistorique allocationWecoHistorique = new AllocationWecoHistorique();
 	            	String allocWecoTemp="";
@@ -118,7 +119,7 @@ public class AllocationWecoHistoriqueDAO implements  AllocationWecoHistoriqueIDA
 	                    
 	                    }
 		                            
-	                if (wecos.size()==5) {
+	                if (wecos.size()==8) {
 	            			allocationWecoHistorique.setIdAllocWecoHist(wecos.get(j-6).getIdAllocWecoHist());
 
 		            }
@@ -168,10 +169,10 @@ public class AllocationWecoHistoriqueDAO implements  AllocationWecoHistoriqueIDA
 	}
 	
 	@Transactional(value="txManagerWiseam",readOnly = false)
-	public List<AllocationWecoHistorique> findWiseamWecoByPtf(PortefeuilleG portefeuilleG) {
+	public List<AllocationWecoHistorique> findWiseamWecoByPtf(PortefeuilleG portefeuilleG,Date dateWeco) {
 		
-		Object[] params = new Object[]{portefeuilleG.getIdPortefG()};
-		return(List<AllocationWecoHistorique>) hibernateWiseam.find("select r from AllocationWecoHistorique r where r.ptfG.idPortefG=?",params);
+		Object[] params = new Object[]{portefeuilleG.getIdPortefG(),dateWeco};
+		return(List<AllocationWecoHistorique>) hibernateWiseam.find("select r from AllocationWecoHistorique r where r.ptfG.idPortefG=? and r.dateWeco=?",params);
 
 	}
 	

@@ -9,8 +9,10 @@ import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import idao.AllocationIDAO;
 import model.Allocation;
+import model.AllocationHistorique;
 import model.Asset;
 import model.PortefeuilleG;
+import model.PortefeuilleHistorique;
 
 public class AllocationDAO implements AllocationIDAO{
 
@@ -49,9 +51,10 @@ public class AllocationDAO implements AllocationIDAO{
 	}
 
 	@Transactional(value="txManagerWiseam",readOnly = false)
-	public Allocation findAllAllocationTopaze(){
+	public void findAllAllocationTopaze(AllocationHistoriqueDAO allocationHistoriqueDAO){
 
-		String sql = "select nbins,nbpos,qtpos,vapos,wgpos from tw_position";
+		String sql = "select a.nbins,a.nbpos,a.dapos,a.qtpos,a.vapos,a.wgpos FROM tw_position a where a.dapos= "
+				+ "(select max(b.dapos) from topazeweb.tw_position b where a.nbins=b.nbins and a.nbpos=b.nbpos)";
 
 		Connection conn = null;
 
@@ -60,11 +63,12 @@ public class AllocationDAO implements AllocationIDAO{
 			PreparedStatement ps = conn.prepareStatement(sql);
 			Allocation allocation = null;
 			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 				allocation = new Allocation(
 					rs.getFloat("QTPOS"),
 					rs.getFloat("WGPOS"),
-					rs.getFloat("VAPOS")
+					rs.getFloat("VAPOS"),
+					rs.getDate("DAPOS")
 				);	
 			
 			PortefeuilleG portefeuilleTemp = hibernateWiseam.get(PortefeuilleG.class,rs.getInt("NBINS"));
@@ -75,6 +79,16 @@ public class AllocationDAO implements AllocationIDAO{
 				allocation.setAsset(assetTemp);
 				allocation.setPortef(portefeuilleTemp);
 				
+				AllocationHistorique allocationHistorique = allocationHistoriqueDAO.findByAllocationHistoriqueId(allocation);
+		    	
+				if (allocationHistorique.getDateArchivageAllocation()==null) {
+					allocationHistoriqueDAO.findAllocHistTopaze(allocation);  // no line into hist for this ptf
+					
+				}else {
+					allocationHistoriqueDAO.findAllocHistTopaze(allocation, allocationHistorique); // already line into hist for this ptf
+				}
+				
+				// Insert into Allocation
 				insertWiseamAllocation(allocation);
 			}
 
@@ -83,7 +97,6 @@ public class AllocationDAO implements AllocationIDAO{
 			rs.close();
 			ps.close();
 			
-			return allocation;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -95,6 +108,9 @@ public class AllocationDAO implements AllocationIDAO{
 		}
 	}
 
+	/*select a.nbins,a.nbpos,a.dapos FROM topazeweb.tw_position a where a.nbins=46 and a.nbpos=2 
+			and a.dapos= (select max(b.dapos) from topazeweb.tw_position b where a.nbins=b.nbins and a.nbpos=b.nbpos);*/
+	
 	@Transactional(value="txManagerWiseam",readOnly = false)
 	public void insertWiseamAllocation (Allocation allocation) {
 		

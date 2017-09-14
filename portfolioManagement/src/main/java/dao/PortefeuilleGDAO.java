@@ -63,7 +63,7 @@ public class PortefeuilleGDAO implements PortefeuilleGIDAO {
 	@Transactional(value="txManagerWiseam",readOnly = false)
 	public void findAllPtfTopaze(PortefeuilleHistoriqueDAO portefeuilleHistoriqueDAO,ClientFinalDAO clientFinalDAO,AssureurDAO assureurDAO) throws DataAccessException, ParseException{
 
-		String sql = "select nbins,amnav,if(dasta = '0000-00-00', null, dasta) as dasta,if(danav = '0000-00-00', null, danav) as danav,codom,coccy,tyctr,tyent,naent,coent,nbben,isin from  tw_portfolio where nbins=46";
+		String sql = "select nbins,coacc,amnav,if(dasta = '0000-00-00', null, dasta) as dasta,if(danav = '0000-00-00', null, danav) as danav,codom,coccy,tyctr,tyent,naent,coent,nbben,isin from  tw_portfolio where nbins=46";
 
 		Connection conn = null;
 
@@ -77,6 +77,7 @@ public class PortefeuilleGDAO implements PortefeuilleGIDAO {
 				portefeuilleG = new PortefeuilleG(
 						rs.getInt("NBINS"),
 						rs.getString("COENT"),
+						rs.getString("COACC"),
 						rs.getString("COCCY"),
 						rs.getFloat("AMNAV"),
 						rs.getDate("DANAV"),
@@ -93,8 +94,6 @@ public class PortefeuilleGDAO implements PortefeuilleGIDAO {
 				}else {
 					portefeuilleG.setArb(false); // if not
 				}
-
-				portefeuilleG.setVl(findVlPtfTopaze(portefeuilleG));
 				
 				if (portefeuilleG.getTypePTF().equals("Client")) {
 					
@@ -122,18 +121,25 @@ public class PortefeuilleGDAO implements PortefeuilleGIDAO {
 					    Assureur assureur = hibernateWiseam.get(Assureur.class, 1); // set the idassureur to 1 (fictif)
 						portefeuilleG.setAssureur(assureur);
 				    }
-							
-					insertWiseamPtf(portefeuilleG); // insert line by line ptf
-				
-					PortefeuilleHistorique portefeuilleHistorique= portefeuilleHistoriqueDAO.findByPortefeuilleHistoriqueId(portefeuilleG);
 					
-					if (portefeuilleHistorique.getDateArchivage()==null) {
-						portefeuilleHistoriqueDAO.findVlDatePtfTopaze(portefeuilleG);  // no line into hist for this ptf
-						
-					}else {
-						portefeuilleHistoriqueDAO.findVlDatePtfTopaze(portefeuilleG, portefeuilleHistorique); // already line into hist for this ptf
-					}
-				
+				    if (portefeuilleG.getTypePTF().equals("Fonds") || portefeuilleG.getTypePTF().equals("Profil de gestion")) {
+				    	
+				    	portefeuilleG.setVl(findVlPtfTopaze(portefeuilleG));
+				    	
+				    	PortefeuilleHistorique portefeuilleHistorique= portefeuilleHistoriqueDAO.findByPortefeuilleHistoriqueId(portefeuilleG);
+				    	
+						if (portefeuilleHistorique.getDateArchivage()==null) {
+							portefeuilleHistoriqueDAO.findVlDatePtfTopaze(portefeuilleG);  // no line into hist for this ptf
+							
+						}else {
+							portefeuilleHistoriqueDAO.findVlDatePtfTopaze(portefeuilleG, portefeuilleHistorique); // already line into hist for this ptf
+						}
+				    }else {
+				    	portefeuilleG.setVl(0);
+				    }
+					
+					insertWiseamPtf(portefeuilleG); // insert line by line ptf
+							
 			}
 			rs.close();
 			ps.close();

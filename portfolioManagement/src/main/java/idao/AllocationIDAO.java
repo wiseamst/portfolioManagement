@@ -1,10 +1,11 @@
 package idao;
 
+import dao.AllocationHistoriqueDAO;
 import model.Allocation;
 
 public interface AllocationIDAO {
 	
-	public Allocation findAllAllocationTopaze();
+	public void findAllAllocationTopaze(AllocationHistoriqueDAO allocationHistoriqueDAO);
 	public void insertWiseamAllocation (Allocation allocation);
 	
 }

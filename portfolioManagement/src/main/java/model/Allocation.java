@@ -22,11 +22,12 @@ public class Allocation implements Serializable{
 	private float prixAllocation;
 	private Date dateAllocation;
 
-	public Allocation(float qty, float poids, float prixAllocation) {
+	public Allocation(float qty, float poids, float prixAllocation, Date dateAllocation) {
 		super();
 		this.qty = qty;
 		this.poids = poids;
 		this.prixAllocation = prixAllocation;
+		this.dateAllocation = dateAllocation;
 	}
 
 	public Allocation() {

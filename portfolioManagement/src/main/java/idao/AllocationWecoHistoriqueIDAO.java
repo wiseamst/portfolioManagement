@@ -1,5 +1,6 @@
 package idao;
 
+import java.sql.Date;
 import java.text.ParseException;
 import java.util.List;
 
@@ -16,5 +17,5 @@ public interface AllocationWecoHistoriqueIDAO {
 	
 	public List<PortefeuilleG> findWiseamPtf();
 	
-	public List<AllocationWecoHistorique> findWiseamWecoByPtf(PortefeuilleG portefeuilleG);
+	public List<AllocationWecoHistorique> findWiseamWecoByPtf(PortefeuilleG portefeuilleG,Date dateWeco);
 }

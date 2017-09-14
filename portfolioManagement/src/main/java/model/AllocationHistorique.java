@@ -22,7 +22,7 @@ public class AllocationHistorique implements Serializable{
 	
 	private Allocation allocation;
 
-	public AllocationHistorique(float qty, float poids, float prixAllocation, Date dateArchivageAllocation) {
+/*	public AllocationHistorique(float qty, float poids, float prixAllocation, Date dateArchivageAllocation) {
 		super();
 		this.qty = qty;
 		this.poids = poids;
@@ -30,6 +30,25 @@ public class AllocationHistorique implements Serializable{
 		this.dateArchivageAllocation = dateArchivageAllocation;
 	}
 	
+	public AllocationHistorique(Allocation allocation) {
+		super();
+		this.qty = allocation.getQty();
+		this.poids = allocation.getPoids();
+		this.prixAllocation = allocation.getPrixAllocation();
+		this.dateArchivageAllocation = allocation.getDateAllocation();
+		this.allocation = allocation;
+	}*/
+
+	public AllocationHistorique(Date dateArchivageAllocation, Allocation allocation) {
+		super();
+		this.dateArchivageAllocation = dateArchivageAllocation;
+		this.allocation = allocation;
+	}
+
+	public AllocationHistorique() {
+		super();
+	}
+
 	@Column
 	public float getQty() {
 		return qty;
