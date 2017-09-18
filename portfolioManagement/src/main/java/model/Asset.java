@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.ColumnDefault;
+
 //Mapping avec la table Asset
 
 @Entity
@@ -111,6 +113,7 @@ public class Asset implements Serializable {
 	}
 	
 	@Column
+	@ColumnDefault("'0.0'")
 	public float getDernierPrix() {
 		return dernierPrix;
 	}

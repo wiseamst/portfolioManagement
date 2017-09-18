@@ -63,7 +63,7 @@ public class PortefeuilleGDAO implements PortefeuilleGIDAO {
 	@Transactional(value="txManagerWiseam",readOnly = false)
 	public void findAllPtfTopaze(PortefeuilleHistoriqueDAO portefeuilleHistoriqueDAO,ClientFinalDAO clientFinalDAO,AssureurDAO assureurDAO) throws DataAccessException, ParseException{
 
-		String sql = "select nbins,coacc,amnav,if(dasta = '0000-00-00', null, dasta) as dasta,if(danav = '0000-00-00', null, danav) as danav,codom,coccy,tyctr,tyent,naent,coent,nbben,isin from  tw_portfolio where nbins=46";
+		String sql = "select nbins,coacc,amnav,if(dasta = '0000-00-00', null, dasta) as dasta,if(danav = '0000-00-00', null, danav) as danav,codom,coccy,tyctr,tyent,naent,coent,nbben,isin from  tw_portfolio";
 
 		Connection conn = null;
 

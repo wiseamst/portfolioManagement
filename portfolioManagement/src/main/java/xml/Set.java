@@ -27,6 +27,10 @@ public class Set {
 		this.commentaire = commentaire;
 	}
 	
+	public Set(String value) {
+		super();
+		this.value = value;
+	}
 	public String getLabel() {
 		return label;
 	}

@@ -3,28 +3,49 @@ package xml;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
 public class Row {
 
-	private List<String> cell = new ArrayList<String>();
-
+	private String style;
+	private List<Cell>  listCell = new ArrayList<Cell>();
+	
 	public Row() {
 		super();
 	}
 
-	public Row(List<String> cell) {
+	public Row(String style) {
 		super();
-		this.cell = cell;
+		this.style = style;
 	}
 
-	public List<String> getCell() {
-		return cell;
+	public Row(String style, List<Cell> listCell) {
+		super();
+		this.style = style;
+		this.listCell = listCell;
 	}
 
-	@XmlElement
-	public void setCell(List<String> cell) {
-		this.cell = cell;
+	public Row(List<Cell> listCell) {
+		super();
+		this.listCell = listCell;
+	}
+
+	public String getStyle() {
+		return style;
+	}
+	@XmlAttribute
+	public void setStyle(String style) {
+		this.style = style;
+	}
+
+	public List<Cell> getListCell() {
+		return listCell;
+	}
+	
+	@XmlElement(name="cell")
+	public void setListCell(List<Cell> listCell) {
+		this.listCell = listCell;
 	}
 
 

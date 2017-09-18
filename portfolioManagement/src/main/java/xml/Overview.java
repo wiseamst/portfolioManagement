@@ -2,8 +2,10 @@ package xml;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement
+@XmlType(propOrder = {"vl", "_1year", "nav", "ytd", "_2year"})
 public class Overview {
 
 	private float vl;

@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.ColumnDefault;
+
 //Mapping avec la table Allocation
 
 @Entity
@@ -57,6 +59,7 @@ public class Allocation implements Serializable{
 	}
 
 	@Column
+	@ColumnDefault("'0.0'")
 	public float getQty() {
 		return qty;
 	}
@@ -64,6 +67,7 @@ public class Allocation implements Serializable{
 		this.qty = qty;
 	}
 	@Column
+	@ColumnDefault("'0.0'")
 	public float getPoids() {
 		return poids;
 	}
@@ -71,6 +75,7 @@ public class Allocation implements Serializable{
 		this.poids = poids;
 	}
 	@Column
+	@ColumnDefault("'0.0'")
 	public float getPrixAllocation() {
 		return prixAllocation;
 	}

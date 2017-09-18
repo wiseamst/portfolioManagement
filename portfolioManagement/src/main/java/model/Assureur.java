@@ -22,13 +22,6 @@ public class Assureur implements Serializable {
 	
 	private Set<CGP> set_CGPs;
 	private Set<PortefeuilleG> set_ptfs;
-	
-	
-	public Assureur(String nomAssureur, String coordonnees) {
-		super();
-		this.nomAssureur = nomAssureur;
-		this.coordonnees = coordonnees;
-	}
 
 	public Assureur(String nomAssureur) {
 		super();

@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.ColumnDefault;
+
 //Mapping avec la table AllocationHistorique
 
 @Entity
@@ -22,25 +24,11 @@ public class AllocationHistorique implements Serializable{
 	
 	private Allocation allocation;
 
-/*	public AllocationHistorique(float qty, float poids, float prixAllocation, Date dateArchivageAllocation) {
-		super();
-		this.qty = qty;
-		this.poids = poids;
-		this.prixAllocation = prixAllocation;
-		this.dateArchivageAllocation = dateArchivageAllocation;
-	}
-	
-	public AllocationHistorique(Allocation allocation) {
+	public AllocationHistorique(Date dateArchivageAllocation, Allocation allocation) {
 		super();
 		this.qty = allocation.getQty();
 		this.poids = allocation.getPoids();
 		this.prixAllocation = allocation.getPrixAllocation();
-		this.dateArchivageAllocation = allocation.getDateAllocation();
-		this.allocation = allocation;
-	}*/
-
-	public AllocationHistorique(Date dateArchivageAllocation, Allocation allocation) {
-		super();
 		this.dateArchivageAllocation = dateArchivageAllocation;
 		this.allocation = allocation;
 	}
@@ -50,6 +38,7 @@ public class AllocationHistorique implements Serializable{
 	}
 
 	@Column
+	@ColumnDefault("'0.0'")
 	public float getQty() {
 		return qty;
 	}
@@ -58,6 +47,7 @@ public class AllocationHistorique implements Serializable{
 	}
 	
 	@Column
+	@ColumnDefault("'0.0'")
 	public float getPoids() {
 		return poids;
 	}
@@ -66,6 +56,7 @@ public class AllocationHistorique implements Serializable{
 	}
 	
 	@Column
+	@ColumnDefault("'0.0'")
 	public float getPrixAllocation() {
 		return prixAllocation;
 	}

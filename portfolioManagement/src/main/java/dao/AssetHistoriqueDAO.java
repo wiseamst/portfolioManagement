@@ -84,7 +84,7 @@ public class AssetHistoriqueDAO implements AssetHistoriqueIDAO {
 	public void findPriceDateAssetTopaze(Asset asset){
 
 	String sql = "select x.nbins,x.dapri,x.close from tw_price x where x.nbins=? and"
-			+ " x.dapri < (select max(y.dapri) and x.dapri>'2017-07-01' from tw_price y where x.nbins = y.nbins) order by x.dapri desc ";
+			+ " x.dapri < (select max(y.dapri) from tw_price y where x.nbins = y.nbins) order by x.dapri desc ";
 // and x.dapri>'2017-07-01'
 	Connection conn = null;
 

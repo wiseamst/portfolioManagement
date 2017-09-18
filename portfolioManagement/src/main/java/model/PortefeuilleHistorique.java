@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.ColumnDefault;
+
 //Mapping avec la table PortefeuilleHistorique
 
 @Entity
@@ -34,7 +36,12 @@ public class PortefeuilleHistorique implements Serializable{
 		this.portef = portef;
 	}
 
+	public PortefeuilleHistorique() {
+		super();
+	}
+
 	@Column
+	@ColumnDefault("'0.0'")
 	public float getVl() {
 		return vl;
 	}
@@ -43,6 +50,7 @@ public class PortefeuilleHistorique implements Serializable{
 	}
 	
 	@Column
+	@ColumnDefault("'0.0'")
 	public float getPerf() {
 		return perf;
 	}

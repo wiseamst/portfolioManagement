@@ -50,7 +50,7 @@ public class AssetDAO  implements AssetIDAO {
 	@Transactional(value="txManagerWiseam",readOnly = false)
 	public void findAllAssetTopaze(AssetHistoriqueDAO assetHistoriqueDAO){
 
-	String sql = "select nbins,coins,coccy,isin,nains,ticker,tyins,tycla,cogeo from tw_instrument  where nbins=2";
+	String sql = "select nbins,coins,coccy,isin,nains,ticker,tyins,tycla,cogeo from tw_instrument";
 
 	Connection conn = null;
 

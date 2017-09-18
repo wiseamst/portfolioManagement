@@ -102,14 +102,14 @@ public class AllocationWecoHistoriqueDAO implements  AllocationWecoHistoriqueIDA
 		           
 		        Sheet datatypeSheet = workbook.getSheetAt(0);
 
-	            for (int j=6; j< 13 + 1; j++) {
+	            for (int j=6; j< 18; j++) {
 	            	
 	            	AllocationWecoHistorique allocationWecoHistorique = new AllocationWecoHistorique();
 	            	String allocWecoTemp="";
 	            	
 	                Row row = datatypeSheet.getRow(j);
 	                
-	                for (int k = 2; k < 5; k++)
+	                for (int k = 2; k < 6; k++)
 
 	                    if (row.getCell(k).getCellTypeEnum() == CellType.STRING) {
 	                    	allocWecoTemp=allocWecoTemp+row.getCell(k).getStringCellValue() + "&";
@@ -119,7 +119,7 @@ public class AllocationWecoHistoriqueDAO implements  AllocationWecoHistoriqueIDA
 	                    
 	                    }
 		                            
-	                if (wecos.size()==8) {
+	                if (wecos.size()==12) {
 	            			allocationWecoHistorique.setIdAllocWecoHist(wecos.get(j-6).getIdAllocWecoHist());
 
 		            }
@@ -133,6 +133,8 @@ public class AllocationWecoHistoriqueDAO implements  AllocationWecoHistoriqueIDA
                  	allocationWecoHistorique.setPourcentagePTF(Float.valueOf(output2[1]));
                  	
                  	allocationWecoHistorique.setPourcentageBench(Float.valueOf(output2[2]));
+                 	
+                 	allocationWecoHistorique.setDiff(Float.valueOf(output2[3]));
                  	
                  	allocationWecoHistorique.setPtfG(portefeuilleG);       
                  	

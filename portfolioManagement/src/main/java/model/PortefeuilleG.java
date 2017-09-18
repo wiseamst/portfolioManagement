@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.ColumnDefault;
+
 //Mapping avec la table PortefeuilleG
 
 @Entity
@@ -48,23 +50,6 @@ public class PortefeuilleG implements Serializable  {
 	private ClientFinal clientFinal;
 	private Assureur assureur;
 	private Set<Allocation> setAlloc;
-	
-	public PortefeuilleG(int idPortefG, String nom, String devise, float amnav, Date danav, String typePTF,
-			String typeCTR, String codom, Date dasta, String isin, int idAR) {
-		super();
-		this.idPortefG = idPortefG;
-		this.nom = nom;
-		this.devise = devise;
-		this.amnav = amnav;
-		this.danav = danav;
-		this.typePTF = typePTF;
-		this.typeCTR = typeCTR;
-		this.codom = codom;
-		this.dasta = dasta;
-		this.isin = isin;
-		this.idAR = idAR;
-	}
-	
 	
 	public PortefeuilleG(int idPortefG, String nom, String numContrat, String devise, float amnav, Date danav,
 			String typePTF, String typeCTR, String codom, Date dasta, String isin, int idAR) {
@@ -120,6 +105,7 @@ public class PortefeuilleG implements Serializable  {
 	}
 	
 	@Column
+	@ColumnDefault("'0.0'")
 	public float getVl() {
 		return vl;
 	}
@@ -128,6 +114,7 @@ public class PortefeuilleG implements Serializable  {
 	}
 	
 	@Column
+	@ColumnDefault("'0.0'")
 	public float getAmnav() {
 		return amnav;
 	}
@@ -183,6 +170,7 @@ public class PortefeuilleG implements Serializable  {
 	}
 	
 	@Column
+	@ColumnDefault("'0.0'")
 	public float getMontantInitial() {
 		return montantInitial;
 	}
@@ -239,6 +227,7 @@ public class PortefeuilleG implements Serializable  {
 	}
 	
 	@Column
+	@ColumnDefault("'0.0'")
 	public float getFraisEntree() {
 		return fraisEntree;
 	}
@@ -247,6 +236,7 @@ public class PortefeuilleG implements Serializable  {
 	}
 	
 	@Column
+	@ColumnDefault("'0.0'")
 	public float getFraisSortie() {
 		return fraisSortie;
 	}
@@ -255,6 +245,7 @@ public class PortefeuilleG implements Serializable  {
 	}
 	
 	@Column
+	@ColumnDefault("'0.0'")
 	public float getFDGF() {
 		return FDGF;
 	}
@@ -263,6 +254,7 @@ public class PortefeuilleG implements Serializable  {
 	}
 	
 	@Column
+	@ColumnDefault("'0.0'")
 	public float getFDGV() {
 		return FDGV;
 	}
@@ -295,6 +287,7 @@ public class PortefeuilleG implements Serializable  {
 	}
 	
 	@Column
+	@ColumnDefault("false")
 	public boolean isArb() {
 		return arb;
 	}

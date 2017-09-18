@@ -84,7 +84,7 @@ public class PortefeuilleHistoriqueDAO  implements PortefeuilleHistoriqueIDAO {
 	public void findVlDatePtfTopaze(PortefeuilleG portefeuilleG){
 
 	String sql = "select x.nbins,x.dapri,x.close from tw_price x where x.nbins=? and"
-			+ " x.dapri < ? and x.dapri>'2017-07-01' order by x.dapri desc";
+			+ " x.dapri < ? order by x.dapri desc";
 // and x.dapri>'2017-07-01'
 	Connection conn = null;
 

@@ -33,6 +33,10 @@ public class CGP implements Serializable {
 		this.coordonnees = coordonnees;
 	}
 
+	public CGP() {
+		super();
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getIdCGP() {

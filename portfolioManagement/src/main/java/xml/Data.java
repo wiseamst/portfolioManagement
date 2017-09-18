@@ -13,7 +13,8 @@ import javax.xml.bind.annotation.XmlType;
 public class Data {
 
 	private String type;
-	private String legend;
+	private String style;
+	private List<String> legend;
 	private List<Set> listSet = new ArrayList<Set>();
 	private List<Row> listRow = new ArrayList<Row>();
 	private String disclaimer;
@@ -27,13 +28,13 @@ public class Data {
 		super();
 		this.type = type;
 	}
-
-	public Data(String type, String legend) {
+	
+	public Data(String type, String style) {
 		super();
 		this.type = type;
-		this.legend = legend;
+		this.style = style;
 	}
-	
+
 	public String getType() {
 		return type;
 	}
@@ -42,14 +43,14 @@ public class Data {
 		this.type = type;
 	}
 	
-	public String getLegend() {
+	public List<String> getLegend() {
 		return legend;
 	}
-	@XmlElement
-	public void setLegend(String legend) {
+	@XmlElement(name="legend")
+	public void setLegend(List<String> legend) {
 		this.legend = legend;
 	}
-	
+
 	public List<Set> getListSet() {
 		return listSet;
 	}
@@ -80,6 +81,14 @@ public class Data {
 	@XmlElement(name="text")
 	public void setListText(List<String> listText) {
 		this.listText = listText;
+	}
+
+	public String getStyle() {
+		return style;
+	}
+	@XmlAttribute
+	public void setStyle(String style) {
+		this.style = style;
 	}
 	
 	

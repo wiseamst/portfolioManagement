@@ -102,7 +102,7 @@ public class XmlForExtranet {
 		return listCapsule;
 	}
 	
-	@XmlElement(name="Capsule")
+	@XmlElement(name="capsule")
 	public void setListCapsule(List<Capsule> listCapsule) {
 		this.listCapsule = listCapsule;
 	}

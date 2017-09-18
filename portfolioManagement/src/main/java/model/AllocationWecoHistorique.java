@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.ColumnDefault;
+
 //Mapping avec la table AllocationWecoHistorique
 
 @Entity
@@ -20,24 +22,11 @@ public class AllocationWecoHistorique implements Serializable {
 	private String facteursRisque;
 	private float pourcentagePTF;
 	private float pourcentageBench;
+	private float diff;
 	private String commentaireWeco;
 	private Date dateWeco;
 	
 	private PortefeuilleG ptfG;
-
-	public AllocationWecoHistorique(String facteursRisque, float pourcentagePTF, float pourcentageBench,
-			Date dateWeco) {
-		super();
-		this.facteursRisque = facteursRisque;
-		this.pourcentagePTF = pourcentagePTF;
-		this.pourcentageBench = pourcentageBench;
-		this.dateWeco = dateWeco;
-	}
-
-	public AllocationWecoHistorique(String commentaireWeco) {
-		super();
-		this.commentaireWeco = commentaireWeco;
-	}
 
 	public AllocationWecoHistorique() {
 		super();
@@ -63,6 +52,7 @@ public class AllocationWecoHistorique implements Serializable {
 	}
 	
 	@Column
+	@ColumnDefault("'0.0'")
 	public float getPourcentagePTF() {
 		return pourcentagePTF;
 	}
@@ -72,6 +62,7 @@ public class AllocationWecoHistorique implements Serializable {
 	}
 	
 	@Column
+	@ColumnDefault("'0.0'")
 	public float getPourcentageBench() {
 		return pourcentageBench;
 	}
@@ -95,6 +86,16 @@ public class AllocationWecoHistorique implements Serializable {
 		this.dateWeco = dateWeco;
 	}
 	
+	@Column
+	@ColumnDefault("'0.0'")
+	public float getDiff() {
+		return diff;
+	}
+
+	public void setDiff(float diff) {
+		this.diff = diff;
+	}
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "idPortefG")
 	public PortefeuilleG getPtfG() {
@@ -107,8 +108,8 @@ public class AllocationWecoHistorique implements Serializable {
 	@Override
 	public String toString() {
 		return "AllocationWecoHistorique [idAllocWecoHist=" + idAllocWecoHist + ", facteursRisque=" + facteursRisque
-				+ ", pourcentagePTF=" + pourcentagePTF + ", pourcentageBench=" + pourcentageBench + ", commentaireWeco="
-				+ commentaireWeco + ", dateWeco=" + dateWeco + ", ptfG=" + ptfG.getIdPortefG() + "]";
+				+ ", pourcentagePTF=" + pourcentagePTF + ", pourcentageBench=" + pourcentageBench + ", diff=" + diff
+				+ ", commentaireWeco=" + commentaireWeco + ", dateWeco=" + dateWeco + ", ptfG=" + ptfG.getIdPortefG() + "]";
 	}
 
 }

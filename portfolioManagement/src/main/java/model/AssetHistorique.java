@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.ColumnDefault;
+
 //Mapping avec la table AssetHistorique
 
 @Entity
@@ -33,7 +35,12 @@ public class AssetHistorique implements Serializable{
 		this.asset = asset;
 	}
 
+	public AssetHistorique() {
+		super();
+	}
+
 	@Column
+	@ColumnDefault("'0.0'")
 	public void setPerf(float perf) {
 		this.perf = perf;
 	}
@@ -43,6 +50,7 @@ public class AssetHistorique implements Serializable{
 	}
 	
 	@Column
+	@ColumnDefault("'0.0'")
 	public float getDernierPrix() {
 		return dernierPrix;
 	}
