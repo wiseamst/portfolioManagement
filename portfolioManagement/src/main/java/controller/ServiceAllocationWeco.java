@@ -2,6 +2,7 @@ package controller;
 
 import java.text.ParseException;
 import dao.AllocationWecoHistoriqueDAO;
+import dao.PortefeuilleGDAO;
 
 public class ServiceAllocationWeco {
 
@@ -13,8 +14,8 @@ public class ServiceAllocationWeco {
 	}
 	
 	// Monthly Integration
-	public void findAllWeco() throws ParseException {
+	public void findAllWeco(PortefeuilleGDAO portefeuilleGDAO) throws ParseException {
 		
-		allocationWecoHistoriqueDAO.findAllWeco();
+		allocationWecoHistoriqueDAO.findAllWeco(portefeuilleGDAO);
 	}
 }

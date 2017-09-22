@@ -57,8 +57,8 @@ public class AllocationWecoHistoriqueDAO implements  AllocationWecoHistoriqueIDA
 	}
 	
 	@Transactional(value="txManagerWiseam",readOnly = false)
-	public void findAllWeco() throws ParseException{
-		List<PortefeuilleG> ptfs =findWiseamPtf();
+	public void findAllWeco(PortefeuilleGDAO portefeuilleGDAO) throws ParseException{
+		List<PortefeuilleG> ptfs =portefeuilleGDAO.findWiseamPtf();
 		if (ptfs.size()>0) {
 			for (PortefeuilleG ptf: ptfs) {
 				readFromWeco(ptf);
@@ -161,13 +161,6 @@ public class AllocationWecoHistoriqueDAO implements  AllocationWecoHistoriqueIDA
 		System.out.println(allocationWecoHistorique.toString());
 		
 		hibernateWiseam.merge(allocationWecoHistorique);
-	}
-	
-	@Transactional(value="txManagerWiseam",readOnly = false)
-	public List<PortefeuilleG> findWiseamPtf() {
-		
-		return(List<PortefeuilleG>) hibernateWiseam.find("select r from PortefeuilleG r");
-
 	}
 	
 	@Transactional(value="txManagerWiseam",readOnly = false)

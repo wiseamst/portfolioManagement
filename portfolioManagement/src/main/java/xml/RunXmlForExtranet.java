@@ -11,7 +11,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-public class RunXmlFromExtranet {
+public class RunXmlForExtranet {
 
 	public static void main(String[] args) throws ParseException {
 
@@ -49,7 +49,7 @@ public class RunXmlFromExtranet {
 		  listLegend_1.add("Légende");
 		  
 		  List<Set> listSet_1 = new ArrayList<Set>();
-		  listSet_1.add(new Set("01/01","10"));
+		  listSet_1.add(new Set("01/01/2016".substring(0,"01/01/2016".length()- 5),"10"));
 		  listSet_1.add(new Set("01/02","20"));
 		  listSet_1.add(new Set("01/03","-20"));
 		  listSet_1.add(new Set("01/04","70"));

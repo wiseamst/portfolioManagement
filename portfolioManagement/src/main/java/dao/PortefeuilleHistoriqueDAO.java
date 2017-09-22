@@ -1,13 +1,17 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+
 import javax.sql.DataSource;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import idao.PortefeuilleHistoriqueIDAO;
+import model.ClientFinal;
 import model.PortefeuilleG;
 import model.PortefeuilleHistorique;
 
@@ -200,5 +204,28 @@ public class PortefeuilleHistoriqueDAO  implements PortefeuilleHistoriqueIDAO {
 		
 		hibernateWiseam.saveOrUpdate(portefeuilleHistorique);
 		
+	}
+	
+	@Transactional(value="txManagerWiseam",readOnly = false)
+	public List<PortefeuilleHistorique> findWiseamPtfHist() {
+		
+		return(List<PortefeuilleHistorique>) hibernateWiseam.find("select r from PortefeuilleHistorique r");
+
+	}
+	
+	@Transactional(value="txManagerWiseam",readOnly = false)
+	public List<PortefeuilleHistorique> findWiseamPtfHistById(int idPortefG) {
+		
+		Object[] params = new Object[]{idPortefG};
+		return(List<PortefeuilleHistorique>) hibernateWiseam.find("select r from PortefeuilleHistorique r where r.portef.idPortefG=? ORDER BY r.dateArchivage DESC",params);
+
+	}
+	
+	@Transactional(value="txManagerWiseam",readOnly = false)
+	public List<PortefeuilleHistorique> findWiseamPtfHistByIdAsc(int idPortefG) {
+		
+		Object[] params = new Object[]{idPortefG};
+		return(List<PortefeuilleHistorique>) hibernateWiseam.find("select r from PortefeuilleHistorique r where r.portef.idPortefG=? ORDER BY r.dateArchivage ASC",params);
+
 	}
 }

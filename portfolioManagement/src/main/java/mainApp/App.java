@@ -24,6 +24,8 @@ import dao.CGPDAO;
 import dao.ClientFinalDAO;
 import dao.PortefeuilleGDAO;
 import dao.PortefeuilleHistoriqueDAO;
+import series.Fonctions;
+import xml.RunXml;
 
 public class App {
 
@@ -62,7 +64,7 @@ public class App {
             PortefeuilleHistoriqueDAO portefeuilleHistoriqueDAO = (PortefeuilleHistoriqueDAO) context.getBean("portefeuilleHistoriqueDAO");
             
             
-            //Création des services
+/*            //Création des services
             
             ServiceAsset serviceAsset = new ServiceAsset(assetDAO,assetHistoriqueDAO);
 
@@ -81,7 +83,16 @@ public class App {
 
             ServiceAllocationWeco serviceAllocationWeco = new ServiceAllocationWeco(allocationWecoHistoriqueDAO);
             
-            serviceAllocationWeco.findAllWeco();//Chargement des wecos
+            serviceAllocationWeco.findAllWeco(portefeuilleGDAO);//Chargement des wecos
+*/          
+          //  RunXml runXML = new RunXml(portefeuilleGDAO,portefeuilleHistoriqueDAO);
+           // runXML.runXmlAllPtfs();
+            
+            System.out.println(" 3= " + Math.sqrt(3.0)); // racine caré de 3
+            float x= 0.2f;
+            float y= 3;
+            float res = 	(float) Math.pow(x, y);
+            System.out.println(" res  = "+res); //Cette méthode élève le premier argument à la puissance indiquée par le second.
             
 		} catch (SQLException e) {
 			System.out.println("Connection down");
