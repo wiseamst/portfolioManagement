@@ -123,7 +123,7 @@ public class PortefeuilleGDAO implements PortefeuilleGIDAO {
 					portefeuilleG.setClientFinal(clientFinal);
 				}
 				    PortefeuilleG portefeuilleGTemp = hibernateWiseam.get(PortefeuilleG.class, portefeuilleG.getIdPortefG());
-					
+				    
 				    if (portefeuilleGTemp!=null && portefeuilleGTemp.getAssureur().getIdAssureur()==1 || portefeuilleGTemp==null) {
 					    Assureur assureur = hibernateWiseam.get(Assureur.class, 1); // set the idassureur to 1 (fictif)
 						portefeuilleG.setAssureur(assureur);

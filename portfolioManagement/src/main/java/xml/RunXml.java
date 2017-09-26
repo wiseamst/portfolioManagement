@@ -12,17 +12,37 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import dao.AllocationDAO;
+import dao.AllocationWecoHistoriqueDAO;
+import dao.AssetDAO;
+import dao.AssetHistoriqueDAO;
 import dao.PortefeuilleGDAO;
 import dao.PortefeuilleHistoriqueDAO;
+import model.Allocation;
+import model.AllocationWecoHistorique;
+import model.Asset;
 import model.PortefeuilleG;
 import series.Fonctions;
 import series.Performance;
 
 public class RunXml {
-	  
+
+	private List<AllocationWecoHistorique> wecos = new ArrayList<AllocationWecoHistorique>();
+	private List<Asset> assets = new ArrayList<Asset>();
+	
 	private HashMap<Integer,List<Performance>> perfs = new HashMap<Integer,List<Performance>>();
-	private HashMap<Integer,List<Performance>> perfsAsc = new HashMap<Integer,List<Performance>>();
-	private HashMap<Integer,List<Performance>> perfsRebased = new HashMap<Integer,List<Performance>>();
+	private HashMap<Integer,List<Performance>> vlAssetHists = new HashMap<Integer,List<Performance>>();
+	private HashMap<Integer,List<Performance>> perfAssetHists = new HashMap<Integer,List<Performance>>();
+	
+	private HashMap<Integer,List<Performance>> vlRebased = new HashMap<Integer,List<Performance>>();
+	private HashMap<Integer,List<Performance>> perfRebased = new HashMap<Integer,List<Performance>>();
+
+	private HashMap<Integer,List<Performance>> draw = new HashMap<Integer,List<Performance>>();
+	
+	private HashMap<Integer,List<Performance>> volat_2015 = new HashMap<Integer,List<Performance>>();
+	private HashMap<Integer,List<Performance>> volat_2016 = new HashMap<Integer,List<Performance>>();
+	private HashMap<Integer,List<Performance>> volat_2017 = new HashMap<Integer,List<Performance>>();
+
 	private HashMap<Integer,Float> ptfReturn_creation = new HashMap<Integer,Float>();
 	private HashMap<Integer,Float> ptfReturn_1mois = new HashMap<Integer,Float>();
 	private HashMap<Integer,Float> ptfReturn_3mois = new HashMap<Integer,Float>();
@@ -31,36 +51,67 @@ public class RunXml {
 	private HashMap<Integer,Float> ptfReturn_2015 = new HashMap<Integer,Float>();
 	private HashMap<Integer,Float> ptfReturn_2016 = new HashMap<Integer,Float>();
 	private HashMap<Integer,Float> ptfReturn_2017 = new HashMap<Integer,Float>();
+	private HashMap<Integer,Float> ptfVolat_creation = new HashMap<Integer,Float>();
+	private HashMap<Integer,Float> ptfVolat_2015 = new HashMap<Integer,Float>();
+	private HashMap<Integer,Float> ptfVolat_2016 = new HashMap<Integer,Float>();
+	private HashMap<Integer,Float> ptfVolat_2017 = new HashMap<Integer,Float>();
+	
+	private HashMap<Integer,Float> assetReturn_1mois = new HashMap<Integer,Float>();
+	private HashMap<Integer,Float> assetVolat_1mois = new HashMap<Integer,Float>();
+	
 	private List<PortefeuilleG>  ptfs = new ArrayList<PortefeuilleG>();
-    private Fonctions fonction;
     
-	public RunXml(PortefeuilleGDAO portefeuilleGDAO, PortefeuilleHistoriqueDAO portefeuilleHistoriqueDAO) throws ParseException {
+	private Fonctions fonction;
+    
+	public RunXml(PortefeuilleGDAO portefeuilleGDAO, PortefeuilleHistoriqueDAO portefeuilleHistoriqueDAO,AllocationDAO allocationDAO,AllocationWecoHistoriqueDAO allocationWecoHistoriqueDAO,AssetDAO assetDAO,AssetHistoriqueDAO assetHistoriqueDAO) throws ParseException {
 		
-		fonction= new Fonctions(portefeuilleGDAO,portefeuilleHistoriqueDAO);
+		fonction= new Fonctions(portefeuilleGDAO,portefeuilleHistoriqueDAO,allocationDAO,allocationWecoHistoriqueDAO,assetDAO,assetHistoriqueDAO);
 		
 		ptfs =portefeuilleGDAO.findWiseamPtf();
-		
-		perfs=fonction.findallPtfWithPtfHist();
-		
-	    perfsAsc =fonction.findallPtfWithPtfHistAsc();
 	    
-		perfsRebased=fonction.calc_all_rebased(perfsAsc); // du plus ancien
-
-		ptfReturn_creation = fonction.calc_return_drawdown(perfs);
+		perfs= fonction.findallPtfWithPtfHistAscVL();
 		
-		ptfReturn_1mois = fonction.calc_return_drawdown(perfs,1,20);
-		ptfReturn_3mois = fonction.calc_return_drawdown(perfs,3,20);
-		ptfReturn_6mois = fonction.calc_return_drawdown(perfs,6,20);
-		ptfReturn_12mois = fonction.calc_return_drawdown(perfs,12,20);
-		ptfReturn_2015 = fonction.calc_return(perfs,2015);
-		ptfReturn_2016 = fonction.calc_return(perfs,2016);
-		ptfReturn_2017 = fonction.calc_return(perfs,2017);
+		wecos = fonction.findallWecos();
+				
+		vlRebased= fonction.calc_all_rebasedVL();
+		perfRebased= fonction.calc_all_rebasedPERF();
+		
+		draw = fonction.calc_drawdown();
+		
+		ptfReturn_creation = fonction.calc_return_creation();
+		
+		ptfReturn_1mois = fonction.calc_return_mois(1,20);
+		ptfReturn_3mois = fonction.calc_return_mois(3,20);
+		ptfReturn_6mois = fonction.calc_return_mois(6,20);
+		ptfReturn_12mois = fonction.calc_return_mois(12,20);
+		
+		ptfReturn_2015 = fonction.calc_return_annee(2015);
+		ptfReturn_2016 = fonction.calc_return_annee(2016);
+		ptfReturn_2017 = fonction.calc_return_annee(2017);
+		
+		ptfVolat_creation= fonction.calc_volatilite();
+		
+		volat_2015= fonction.calc_annee(2015);
+		volat_2016= fonction.calc_annee(2016);
+		volat_2017= fonction.calc_annee(2017);
+		
+		ptfVolat_2015 = fonction.calc_volatilite_by_list(volat_2015);
+		ptfVolat_2016 = fonction.calc_volatilite_by_list(volat_2016);
+		ptfVolat_2017 = fonction.calc_volatilite_by_list(volat_2017);
 		
 	}
 	
 	public void runXmlAllPtfs() {
         
 		for (PortefeuilleG ptfTemp: ptfs) {
+			
+			assets = fonction.findallAssetByPTF(ptfTemp);
+			
+			vlAssetHists=fonction.findAssetVL(assets);
+			
+			assetReturn_1mois = fonction.calc_return_mois_asset(assets, 1, 20);
+			assetVolat_1mois =fonction.calc_volatilite_by_list(fonction.calc_mois_asset(assets, 1, 20));
+
 			run(ptfTemp);
 		}
 	}
@@ -71,11 +122,11 @@ public class RunXml {
 		  
 		  xml.setTitle(ptf.getNom());
 		  xml.setDate(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
-		  xml.setFreq("Mensuel");
-		  xml.setRef(1);
-		  xml.setIdreporting(1);
-		  xml.setType("C3");
-		  xml.setCat("AXA");
+		  xml.setFreq("Nothing");
+		  xml.setRef(0);
+		  xml.setIdreporting(0);
+		  xml.setType("Nothing");
+		  xml.setCat("Nothing");
 
 		  List<Integer> listId = new ArrayList<Integer>();
 		  listId.add(ptf.getClientFinal().getIdClient());
@@ -84,10 +135,10 @@ public class RunXml {
 		  
 		  Overview overview = new Overview();
 		  overview.setVl(ptf.getVl());
-		  overview.set_1year("50.0%");
+		  overview.set_1year("Nothing");
 		  overview.setNav(ptf.getAmnav());
-		  overview.setYtd(3);
-		  overview.set_2year("50.0%");
+		  overview.setYtd(0);
+		  overview.set_2year("Nothing");
 		  
 		  xml.setOverview(overview);
 		  
@@ -98,8 +149,8 @@ public class RunXml {
 		  listLegend_1.add("Légende");
 		  
 		  List<Set> listSet_1 = new ArrayList<Set>();
-		  if (perfsRebased.containsKey(ptf.getIdPortefG())){
-			  for (Performance perf: perfsRebased.get(ptf.getIdPortefG())) {
+		  if (vlRebased.containsKey(ptf.getIdPortefG())){
+			  for (Performance perf: vlRebased.get(ptf.getIdPortefG())) {
 				  listSet_1.add(new Set(perf.getDate(),String.valueOf(perf.getValeur())));
 			  }
 		  }
@@ -119,11 +170,12 @@ public class RunXml {
 		  listLegend_2.add("Légende");
 		  
 		  List<Set> listSet_2 = new ArrayList<Set>();
-		  listSet_2.add(new Set("01/01","3"));
-		  listSet_2.add(new Set("01/02","-2"));
-		  listSet_2.add(new Set("01/03","-5"));
-		  listSet_2.add(new Set("01/04","7"));
-		  listSet_2.add(new Set("01/05","0"));
+		  
+		  if (draw.containsKey(ptf.getIdPortefG())){
+			  for (Performance perf: draw.get(ptf.getIdPortefG())) {
+				  listSet_2.add(new Set(perf.getDate(),String.valueOf(perf.getValeur())));
+			  }
+		  }
 		  
 		  Data data_2 = new Data("chart"); 
 		  data_2.setLegend(listLegend_2);
@@ -141,11 +193,11 @@ public class RunXml {
 		  listLegend_3_a.add("Légende");
 
 		  List<Set> listSet_3_a = new ArrayList<Set>();
-		  listSet_3_a.add(new Set("01/01","10"));
-		  listSet_3_a.add(new Set("01/02","20"));
-		  listSet_3_a.add(new Set("01/03","-20"));
-		  listSet_3_a.add(new Set("01/04","70"));
-		  listSet_3_a.add(new Set("01/05","50"));
+		  if (perfRebased.containsKey(ptf.getIdPortefG())){
+			  for (Performance perf: perfRebased.get(ptf.getIdPortefG())) {
+				  listSet_3_a.add(new Set(perf.getDate(),String.valueOf(perf.getValeur())));
+			  }
+		  }
 		  
 		  Data data_3_a = new Data("chart"); 
 		  data_3_a.setLegend(listLegend_3_a);
@@ -155,11 +207,11 @@ public class RunXml {
 		  listLegend_3_b.add("Légende");
 		  
 		  List<Set> listSet_3_b = new ArrayList<Set>();
-		  listSet_3_b.add(new Set("01/01","20"));
-		  listSet_3_b.add(new Set("01/02","50"));
-		  listSet_3_b.add(new Set("01/03","30"));
-		  listSet_3_b.add(new Set("01/04","-30"));
-		  listSet_3_b.add(new Set("01/05","60"));
+		  if (perfRebased.containsKey(ptf.getIdAR())){
+			  for (Performance perf: perfRebased.get(ptf.getIdAR())) {
+				  listSet_3_b.add(new Set(perf.getDate(),String.valueOf(perf.getValeur())));
+			  }
+		  }
 		  
 		  Data data_3_b = new Data("chart");
 		  data_3_b.setLegend(listLegend_3_b);
@@ -178,11 +230,13 @@ public class RunXml {
 		  listLegend_4.add("Légende");
 		  
 		  List<Set> listSet_4 = new ArrayList<Set>();
-		  listSet_4.add(new Set("01/01","10","Commentraire for 01/01"));
-		  listSet_4.add(new Set("01/02","20","Commentraire for 01/02"));
-		  listSet_4.add(new Set("01/03","-20"));
-		  listSet_4.add(new Set("01/04","70"));
-		  listSet_4.add(new Set("01/05","50"));
+		  if (perfs.containsKey(ptf.getIdPortefG())){
+			  for (Performance perf: perfs.get(ptf.getIdPortefG())) {
+				  listSet_4.add(new Set(perf.getDate(),String.valueOf(perf.getValeur())));
+			  }
+		  }
+		  //listSet_4.add(new Set("01/01","10","Commentraire for 01/01"));
+		  //listSet_4.add(new Set("01/02","20","Commentraire for 01/02"));
 		  
 		  Data data_4 = new Data("chart"); 
 		  data_4.setLegend(listLegend_4);
@@ -196,21 +250,118 @@ public class RunXml {
 		  Capsule capsule_5 = new Capsule(5,"column","Tableau avec col droite");
 
 		  List<Cell> listCell_5_a = new ArrayList<Cell>();
-		  listCell_5_a.add(new Cell("1"));
-		  listCell_5_a.add(new Cell("2"));
+		  listCell_5_a.add(new Cell("Exposition aux différents facteurs de risque"));
+		  listCell_5_a.add(new Cell("WiseSRRI"));
+		  listCell_5_a.add(new Cell("Benchmark"));
+		  listCell_5_a.add(new Cell("Diff"));
 		  
 		  List<Cell> listCell_5_b = new ArrayList<Cell>();
-		  listCell_5_b.add(new Cell("3"));
-		  listCell_5_b.add(new Cell("4"));
-		  
 		  List<Cell> listCell_5_c = new ArrayList<Cell>();
-		  listCell_5_c.add(new Cell("5"));
-		  listCell_5_c.add(new Cell("6"));
+		  List<Cell> listCell_5_d = new ArrayList<Cell>();
+		  List<Cell> listCell_5_e = new ArrayList<Cell>();
+		  List<Cell> listCell_5_f = new ArrayList<Cell>();
+		  List<Cell> listCell_5_g = new ArrayList<Cell>();
+		  List<Cell> listCell_5_h = new ArrayList<Cell>();
+		  List<Cell> listCell_5_i = new ArrayList<Cell>();
+	  	  List<Cell> listCell_5_j = new ArrayList<Cell>();
+	  	  List<Cell> listCell_5_k = new ArrayList<Cell>();
+	  	  List<Cell> listCell_5_l = new ArrayList<Cell>();
+	  	  
+		  for (AllocationWecoHistorique weco: wecos) {
+
+			  if(weco.getPtfG().getIdPortefG()==ptf.getIdPortefG() && weco.getFacteursRisque().equals("Monétaire")) {
+				  listCell_5_b.add(new Cell("Monétaire"));
+				  listCell_5_b.add(new Cell(Float.toString(weco.getPourcentagePTF())));
+				  listCell_5_b.add(new Cell(Float.toString(weco.getPourcentageBench())));
+				  listCell_5_b.add(new Cell(Float.toString(weco.getDiff())));
+			  } 
+		  
+			  if(weco.getPtfG().getIdPortefG()==ptf.getIdPortefG() && weco.getFacteursRisque().equals("Obligations d'Etat (High Grade)")) {
+				  listCell_5_c.add(new Cell("Obligations d'Etat (High Grade)"));
+				  listCell_5_c.add(new Cell(Float.toString(weco.getPourcentagePTF())));
+				  listCell_5_c.add(new Cell(Float.toString(weco.getPourcentageBench())));
+				  listCell_5_c.add(new Cell(Float.toString(weco.getDiff())));
+			  }  
+		  
+			  if(weco.getPtfG().getIdPortefG()==ptf.getIdPortefG() && weco.getFacteursRisque().equals("Obligations émergentes")) {
+				  listCell_5_d.add(new Cell("Obligations émergentes"));
+				  listCell_5_d.add(new Cell(Float.toString(weco.getPourcentagePTF())));
+				  listCell_5_d.add(new Cell(Float.toString(weco.getPourcentageBench())));
+				  listCell_5_d.add(new Cell(Float.toString(weco.getDiff())));
+			  }  
+		  
+			  if(weco.getPtfG().getIdPortefG()==ptf.getIdPortefG() && weco.getFacteursRisque().equals("Actions")) {
+				  listCell_5_e.add(new Cell("Actions"));
+				  listCell_5_e.add(new Cell(Float.toString(weco.getPourcentagePTF())));
+				  listCell_5_e.add(new Cell(Float.toString(weco.getPourcentageBench())));
+				  listCell_5_e.add(new Cell(Float.toString(weco.getDiff())));
+			  }  
+
+			  if(weco.getPtfG().getIdPortefG()==ptf.getIdPortefG() && weco.getFacteursRisque().equals("Actions américaines")) {
+				  listCell_5_f.add(new Cell("Actions américaines"));
+				  listCell_5_f.add(new Cell(Float.toString(weco.getPourcentagePTF())));
+				  listCell_5_f.add(new Cell(Float.toString(weco.getPourcentageBench())));
+				  listCell_5_f.add(new Cell(Float.toString(weco.getDiff())));
+			  }  
+		  
+			  if(weco.getPtfG().getIdPortefG()==ptf.getIdPortefG() && weco.getFacteursRisque().equals("Actions européennes")) {
+				  listCell_5_g.add(new Cell("Actions européennes"));
+				  listCell_5_g.add(new Cell(Float.toString(weco.getPourcentagePTF())));
+				  listCell_5_g.add(new Cell(Float.toString(weco.getPourcentageBench())));
+				  listCell_5_g.add(new Cell(Float.toString(weco.getDiff())));
+			  }
+		  
+			  if(weco.getPtfG().getIdPortefG()==ptf.getIdPortefG() && weco.getFacteursRisque().equals("Actions émergentes")) {
+				  listCell_5_h.add(new Cell("Actions émergentes"));
+				  listCell_5_h.add(new Cell(Float.toString(weco.getPourcentagePTF())));
+				  listCell_5_h.add(new Cell(Float.toString(weco.getPourcentageBench())));
+				  listCell_5_h.add(new Cell(Float.toString(weco.getDiff())));
+			  }  
+
+			  if(weco.getPtfG().getIdPortefG()==ptf.getIdPortefG() && weco.getFacteursRisque().equals("USD/EUR")) {
+				  listCell_5_i.add(new Cell("USD/EUR"));
+				  listCell_5_i.add(new Cell(Float.toString(weco.getPourcentagePTF())));
+				  listCell_5_i.add(new Cell(Float.toString(weco.getPourcentageBench())));
+				  listCell_5_i.add(new Cell(Float.toString(weco.getDiff())));
+			  }  
+
+			  if(weco.getPtfG().getIdPortefG()==ptf.getIdPortefG() && weco.getFacteursRisque().equals("Small Cap vs Large Cap")) {
+				  listCell_5_j.add(new Cell("Small Cap vs Large Cap"));
+				  listCell_5_j.add(new Cell(Float.toString(weco.getPourcentagePTF())));
+				  listCell_5_j.add(new Cell(Float.toString(weco.getPourcentageBench())));
+				  listCell_5_j.add(new Cell(Float.toString(weco.getDiff())));
+			  }  
+		  
+
+			  if(weco.getPtfG().getIdPortefG()==ptf.getIdPortefG() && weco.getFacteursRisque().equals("Croissance vs Value")) {
+				  listCell_5_k.add(new Cell("Croissance vs Value"));
+				  listCell_5_k.add(new Cell(Float.toString(weco.getPourcentagePTF())));
+				  listCell_5_k.add(new Cell(Float.toString(weco.getPourcentageBench())));
+				  listCell_5_k.add(new Cell(Float.toString(weco.getDiff())));
+			  }  
+		  
+			  if(weco.getPtfG().getIdPortefG()==ptf.getIdPortefG() && weco.getFacteursRisque().equals("Volatilité")) {
+				  listCell_5_l.add(new Cell("Volatilité"));
+				  listCell_5_l.add(new Cell(Float.toString(weco.getPourcentagePTF())));
+				  listCell_5_l.add(new Cell(Float.toString(weco.getPourcentageBench())));
+				  listCell_5_l.add(new Cell(Float.toString(weco.getDiff())));
+			
+			  }
+		  }
 		  
 		  List<Row> listRow_5 = new ArrayList<Row>();
 		  listRow_5.add(new Row(listCell_5_a));
 		  listRow_5.add(new Row(listCell_5_b));
 		  listRow_5.add(new Row(listCell_5_c));
+		  listRow_5.add(new Row(listCell_5_d));
+		  listRow_5.add(new Row(listCell_5_e));
+		  listRow_5.add(new Row(listCell_5_f));
+		  listRow_5.add(new Row(listCell_5_g));
+		  listRow_5.add(new Row(listCell_5_h));
+		  listRow_5.add(new Row(listCell_5_i));
+		  listRow_5.add(new Row(listCell_5_j));
+		  listRow_5.add(new Row(listCell_5_k));
+		  listRow_5.add(new Row(listCell_5_l));
 		  
 		  Data data_5_a = new Data("table");
 		  data_5_a.setListRow(listRow_5);
@@ -231,7 +382,7 @@ public class RunXml {
 		  
 		  /////////////////////////////////////////////////////////////////////
 		  Capsule capsule_6 = new Capsule(6,"chart_clustered_stacked_bar","Tableau baton cummulé");
-		  
+
 		  List<String> listText_6 = new ArrayList<String>();
 		  listText_6.add("BLA BLA BLA ");
 
@@ -285,25 +436,29 @@ public class RunXml {
 		  listCell_8_1b.add(new Cell("1 mois"));
 		  if (ptfReturn_1mois.containsKey(ptf.getIdPortefG())){
 			  listCell_8_1b.add(new Cell(ptfReturn_1mois.get(ptf.getIdPortefG()).toString()));}
-		  listCell_8_1b.add(new Cell("0"));
+		  if (ptfReturn_1mois.containsKey(ptf.getIdAR())){
+			  listCell_8_1b.add(new Cell(ptfReturn_1mois.get(ptf.getIdAR()).toString()));}
 		  
 		  List<Cell> listCell_8_1c = new ArrayList<Cell>();
 		  listCell_8_1c.add(new Cell("3 mois"));
 		  if (ptfReturn_3mois.containsKey(ptf.getIdPortefG())){
 			  listCell_8_1c.add(new Cell(ptfReturn_3mois.get(ptf.getIdPortefG()).toString()));}
-		  listCell_8_1c.add(new Cell("0"));
+		  if (ptfReturn_3mois.containsKey(ptf.getIdAR())){
+			  listCell_8_1c.add(new Cell(ptfReturn_3mois.get(ptf.getIdAR()).toString()));}
 		  
 		  List<Cell> listCell_8_1d = new ArrayList<Cell>();
 		  listCell_8_1d.add(new Cell("6 mois"));
 		  if (ptfReturn_6mois.containsKey(ptf.getIdPortefG())){
 			  listCell_8_1d.add(new Cell(ptfReturn_6mois.get(ptf.getIdPortefG()).toString()));}
-		  listCell_8_1d.add(new Cell("0"));
+		  if (ptfReturn_6mois.containsKey(ptf.getIdAR())){
+			  listCell_8_1d.add(new Cell(ptfReturn_6mois.get(ptf.getIdAR()).toString()));}
 		  
 		  List<Cell> listCell_8_1e = new ArrayList<Cell>();
 		  listCell_8_1e.add(new Cell("1 an"));
 		  if (ptfReturn_12mois.containsKey(ptf.getIdPortefG())){
 			  listCell_8_1e.add(new Cell(ptfReturn_12mois.get(ptf.getIdPortefG()).toString()));}
-		  listCell_8_1e.add(new Cell("0"));
+		  if (ptfReturn_12mois.containsKey(ptf.getIdAR())){
+			  listCell_8_1e.add(new Cell(ptfReturn_12mois.get(ptf.getIdAR()).toString()));}
 		  
 		  List<Row> listRow_8_a = new ArrayList<Row>();
 		  listRow_8_a.add(new Row(listCell_8_1a));
@@ -321,25 +476,29 @@ public class RunXml {
 		  listCell_8_2b.add(new Cell("2017"));
 		  if (ptfReturn_2017.containsKey(ptf.getIdPortefG())){
 			  listCell_8_2b.add(new Cell(ptfReturn_2017.get(ptf.getIdPortefG()).toString()));}
-		  listCell_8_2b.add(new Cell("0"));
+		  if (ptfReturn_2017.containsKey(ptf.getIdAR())){
+			  listCell_8_2b.add(new Cell(ptfReturn_2017.get(ptf.getIdAR()).toString()));}
 		  
 		  List<Cell> listCell_8_2c = new ArrayList<Cell>();
 		  listCell_8_2c.add(new Cell("2016"));
 		  if (ptfReturn_2016.containsKey(ptf.getIdPortefG())){
 			  listCell_8_2c.add(new Cell(ptfReturn_2016.get(ptf.getIdPortefG()).toString()));}
-		  listCell_8_2c.add(new Cell("0"));
+		  if (ptfReturn_2016.containsKey(ptf.getIdAR())){
+			  listCell_8_2c.add(new Cell(ptfReturn_2016.get(ptf.getIdAR()).toString()));}
 		  
 		  List<Cell> listCell_8_2d = new ArrayList<Cell>();
 		  listCell_8_2d.add(new Cell("2015"));
 		  if (ptfReturn_2015.containsKey(ptf.getIdPortefG())){
 			  listCell_8_2d.add(new Cell(ptfReturn_2015.get(ptf.getIdPortefG()).toString()));}
-		  listCell_8_2d.add(new Cell("0"));
+		  if (ptfReturn_2015.containsKey(ptf.getIdAR())){
+			  listCell_8_2d.add(new Cell(ptfReturn_2015.get(ptf.getIdAR()).toString()));}
 		  
 		  List<Cell> listCell_8_2e = new ArrayList<Cell>();
 		  listCell_8_2e.add(new Cell("Depuis la création"));
 		  if (ptfReturn_creation.containsKey(ptf.getIdPortefG())){
 			  listCell_8_2e.add(new Cell(ptfReturn_creation.get(ptf.getIdPortefG()).toString()));}
-		  listCell_8_2e.add(new Cell("0"));
+		  if (ptfReturn_creation.containsKey(ptf.getIdAR())){
+			  listCell_8_2e.add(new Cell(ptfReturn_creation.get(ptf.getIdAR()).toString()));}
 		  
 		  List<Row> listRow_8_b = new ArrayList<Row>();
 		  listRow_8_b.add(new Row(listCell_8_2a));
@@ -355,23 +514,31 @@ public class RunXml {
 		  
 		  List<Cell> listCell_8_3b = new ArrayList<Cell>();
 		  listCell_8_3b.add(new Cell("2017"));
-		  listCell_8_3b.add(new Cell("0"));
-		  listCell_8_3b.add(new Cell("0"));
+		  if (ptfVolat_2017.containsKey(ptf.getIdPortefG())){
+			  listCell_8_3b.add(new Cell(ptfVolat_2017.get(ptf.getIdPortefG()).toString()));}
+		  if (ptfVolat_2017.containsKey(ptf.getIdAR())){
+			  listCell_8_3b.add(new Cell(ptfVolat_2017.get(ptf.getIdAR()).toString()));}
 		  
 		  List<Cell> listCell_8_3c = new ArrayList<Cell>();
 		  listCell_8_3c.add(new Cell("2016"));
-		  listCell_8_3c.add(new Cell("0"));
-		  listCell_8_3c.add(new Cell("0"));
+		  if (ptfVolat_2016.containsKey(ptf.getIdPortefG())){
+			  listCell_8_3c.add(new Cell(ptfVolat_2016.get(ptf.getIdPortefG()).toString()));}
+		  if (ptfVolat_2016.containsKey(ptf.getIdAR())){
+			  listCell_8_3c.add(new Cell(ptfVolat_2016.get(ptf.getIdAR()).toString()));}
 		  
 		  List<Cell> listCell_8_3d = new ArrayList<Cell>();
 		  listCell_8_3d.add(new Cell("2015"));
-		  listCell_8_3d.add(new Cell("0"));
-		  listCell_8_3d.add(new Cell("0"));
+		  if (ptfVolat_2015.containsKey(ptf.getIdPortefG())){
+			  listCell_8_3d.add(new Cell(ptfVolat_2015.get(ptf.getIdPortefG()).toString()));}
+		  if (ptfVolat_2015.containsKey(ptf.getIdAR())){
+			  listCell_8_3d.add(new Cell(ptfVolat_2015.get(ptf.getIdAR()).toString()));}
 		  
 		  List<Cell> listCell_8_3e = new ArrayList<Cell>();
 		  listCell_8_3e.add(new Cell("Depuis la création"));
-		  listCell_8_3e.add(new Cell("0"));
-		  listCell_8_3e.add(new Cell("0"));
+		  if (ptfVolat_creation.containsKey(ptf.getIdPortefG())){
+			  listCell_8_3e.add(new Cell(ptfVolat_creation.get(ptf.getIdPortefG()).toString()));}
+		  if (ptfVolat_creation.containsKey(ptf.getIdAR())){
+			  listCell_8_3e.add(new Cell(ptfVolat_creation.get(ptf.getIdAR()).toString()));}
 		  
 		  List<Row> listRow_8_c = new ArrayList<Row>();
 		  listRow_8_c.add(new Row(listCell_8_3a));
@@ -437,10 +604,17 @@ public class RunXml {
 		  Capsule capsule_11 = new Capsule(11,"vl_encours");
 		  
 		  List<String> listText_11 = new ArrayList<String>();
-		  listText_11.add("BLA BLA BLA ");
-		  listText_11.add("BOO BOO BOO"); 
-		  listText_11.add("BAM BAM BAM ");
 		  
+		  if (ptf.getTypePTF().equals("Fonds")) {
+			  listText_11.add("VL:"+ptf.getVl());
+			  listText_11.add("au");
+			  listText_11.add("Encours:"+ptf.getAmnav());
+		  }
+		  
+		  if (ptf.getTypePTF().equals("Client")) {
+			  listText_11.add("Encours:"+ptf.getAmnav());
+		  }
+
 		  Data data_11 = new Data("text");
 		  data_11.setListText(listText_11);
 		  
@@ -468,21 +642,36 @@ public class RunXml {
 		  listText_13.add("BLA BLA BLA");
 		  
 		  List<Cell> listCell_13_a = new ArrayList<Cell>();
-		  listCell_13_a.add(new Cell("1"));
-		  listCell_13_a.add(new Cell("2"));
-		  
-		  List<Cell> listCell_13_b = new ArrayList<Cell>();
-		  listCell_13_b.add(new Cell("3"));
-		  listCell_13_b.add(new Cell("4"));
-		  
-		  List<Cell> listCell_13_c = new ArrayList<Cell>();
-		  listCell_13_c.add(new Cell("5"));
-		  listCell_13_c.add(new Cell("6"));
+		  listCell_13_a.add(new Cell("Zone géographique"));
+		  listCell_13_a.add(new Cell("Classe"));
+		  listCell_13_a.add(new Cell("Isin"));
+		  listCell_13_a.add(new Cell("Ligne par ligne"));
+		  listCell_13_a.add(new Cell("Poids dans le portefeuille"));
+		  listCell_13_a.add(new Cell("Volatilité"));
+		  listCell_13_a.add(new Cell("Contribution à la performance"));
+		  listCell_13_a.add(new Cell("Contribution à la volatilité"));
 		  
 		  List<Row> listRow_13 = new ArrayList<Row>();
 		  listRow_13.add(new Row(listCell_13_a));
-		  listRow_13.add(new Row(listCell_13_b));
-		  listRow_13.add(new Row(listCell_13_c));
+
+		  for (Asset asset:assets) {
+			  
+			  List<Cell> listCell_13_b = new ArrayList<Cell>();
+			  
+			  float weight = fonction.findWeight(asset.getIdAsset(),ptf.getIdPortefG());
+			  
+			  listCell_13_b.add(new Cell(asset.getZone()));
+			  listCell_13_b.add(new Cell(asset.getClassType()));
+			  listCell_13_b.add(new Cell(asset.getIsin()));
+			  listCell_13_b.add(new Cell(asset.getNom()));
+			  listCell_13_b.add(new Cell(String.valueOf(weight)));
+			  listCell_13_b.add(new Cell(String.valueOf(assetReturn_1mois.get(asset.getIdAsset()))));
+			  listCell_13_b.add(new Cell(String.valueOf(assetVolat_1mois.get(asset.getIdAsset()))));
+			  listCell_13_b.add(new Cell("0"));
+			  listCell_13_b.add(new Cell("0"));
+			  listRow_13.add(new Row(listCell_13_b));
+			  
+		  }
 		  
 		  Data data_13_a = new Data("text");
 		  data_13_a.setListText(listText_13);
@@ -500,20 +689,39 @@ public class RunXml {
 		  Capsule capsule_14 = new Capsule(14,"position");
 		  
 		  List<Cell> listCell_14_a = new ArrayList<Cell>();
-		  listCell_14_a.add(new Cell("1"));
-		  listCell_14_a.add(new Cell("2"));
-		  
-		  List<Cell> listCell_14_b = new ArrayList<Cell>();
-		  listCell_14_b.add(new Cell("3"));
-		  listCell_14_b.add(new Cell("4"));
-		  
-		  List<Cell> listCell_14_c = new ArrayList<Cell>();
-		  listCell_14_c.add(new Cell("bold","5"));
-		  listCell_14_c.add(new Cell("6"));
+		  listCell_14_a.add(new Cell("Fonds"));
+		  listCell_14_a.add(new Cell("Montants"));
+		  listCell_14_a.add(new Cell("Poids"));
 		  
 		  List<Row> listRow_14 = new ArrayList<Row>();
 		  listRow_14.add(new Row("bold",listCell_14_a));
-		  listRow_14.add(new Row(listCell_14_b));
+
+		  float sommePrix=0;
+		  float sommePoids=0;
+		  
+		  for (Asset asset:assets) {
+			  
+			  Allocation allocation = fonction.findAlloc(asset.getIdAsset(),ptf.getIdPortefG());
+			  
+			  sommePrix= sommePrix+allocation.getPrixAllocation();
+			  sommePoids = sommePoids+allocation.getPoids();
+			  
+			  List<Cell> listCell_14_b = new ArrayList<Cell>();
+			  listCell_14_b.add(new Cell(asset.getNom()));
+			  listCell_14_b.add(new Cell(String.valueOf(allocation.getPrixAllocation())));
+			  listCell_14_b.add(new Cell(String.valueOf(allocation.getPoids())));
+			  listRow_14.add(new Row(listCell_14_b));
+		  }
+		  
+/*		  List<Cell> listCell_14_b = new ArrayList<Cell>();
+		  listCell_14_b.add(new Cell("bold","5"));
+		  listCell_14_b.add(new Cell("4"));*/
+		  
+		  List<Cell> listCell_14_c = new ArrayList<Cell>();
+		  listCell_14_c.add(new Cell("TOTAL"));
+		  listCell_14_c.add(new Cell(String.valueOf(sommePrix)));
+		  listCell_14_c.add(new Cell(String.valueOf(sommePoids)));
+		  
 		  listRow_14.add(new Row("bold",listCell_14_c));
 		  
 		  Data data_14_a = new Data("table");

@@ -32,6 +32,16 @@ public class AllocationWecoHistorique implements Serializable {
 		super();
 	}
 
+	public AllocationWecoHistorique(String facteursRisque, float pourcentagePTF, float pourcentageBench, float diff,
+			String commentaireWeco, Date dateWeco) {
+		super();
+		this.facteursRisque = facteursRisque;
+		this.pourcentagePTF = pourcentagePTF;
+		this.pourcentageBench = pourcentageBench;
+		this.diff = diff;
+		this.commentaireWeco = commentaireWeco;
+		this.dateWeco = dateWeco;
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

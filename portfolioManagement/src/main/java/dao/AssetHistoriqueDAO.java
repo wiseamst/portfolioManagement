@@ -4,12 +4,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+
 import javax.sql.DataSource;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import idao.AssetHistoriqueIDAO;
+import model.Allocation;
 import model.Asset;
 import model.AssetHistorique;
+import model.ClientFinal;
+import model.PortefeuilleG;
 
 public class AssetHistoriqueDAO implements AssetHistoriqueIDAO {
 
@@ -199,5 +204,13 @@ public class AssetHistoriqueDAO implements AssetHistoriqueIDAO {
 		
 		hibernateWiseam.saveOrUpdate(assetHistorique);
 		
+	}
+	
+	@Transactional(value="txManagerWiseam",readOnly = false)
+	public List<AssetHistorique> findWiseamAssetHist(Asset asset) {
+		
+		Object[] params = new Object[]{asset.getIdAsset()};
+		return (List<AssetHistorique>) hibernateWiseam.find("select r from AssetHistorique r where r.asset.idAsset=?  ORDER BY r.dateArchivage DESC",params);
+
 	}
 }

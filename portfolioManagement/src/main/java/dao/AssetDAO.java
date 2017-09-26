@@ -4,12 +4,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.sql.DataSource;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import idao.AssetIDAO;
+import model.AllocationWecoHistorique;
 import model.Asset;
 import model.AssetHistorique;
+import model.PortefeuilleG;
 
 public class AssetDAO  implements AssetIDAO {
 
@@ -144,5 +149,42 @@ public class AssetDAO  implements AssetIDAO {
 		}
 	}
 }
-	
+
+	@Transactional(value="txManagerWiseam",readOnly = false)
+	public List<Asset> findAssetByPtfAlloc(PortefeuilleG portefeuilleG){
+
+	String sql = "select idasset,zone,classType,isin,nom from asset where idasset in (select idasset from allocation where idportefg=?)";
+	Connection conn = null;
+
+	try {
+		conn = dataSourceWiseam.getConnection();
+		PreparedStatement ps = conn.prepareStatement(sql);
+		ps.setInt(1, portefeuilleG.getIdPortefG());
+		Asset asset= null;
+		List<Asset> assets = new ArrayList<Asset>();
+		ResultSet rs = ps.executeQuery();
+		while(rs.next()) {
+			asset = new Asset(
+				rs.getInt("IDASSET"),
+				rs.getString("ISIN"),
+				rs.getString("NOM"),
+				rs.getString("CLASSTYPE"),
+				rs.getString("ZONE")
+			);
+			
+			assets.add(asset);
+		}
+		rs.close();
+		ps.close();
+		return assets;
+	} catch (SQLException e) {
+		throw new RuntimeException(e);
+	} finally {
+		if (conn != null) {
+			try {
+			conn.close();
+			} catch (SQLException e) {}
+		}
+	}
+}
 }

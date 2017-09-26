@@ -41,6 +41,15 @@ public class Asset implements Serializable {
 		this.classType = classType;
 		this.zone = zone;
 	}
+	
+	public Asset(int idAsset, String isin, String nom, String classType, String zone) {
+		super();
+		this.idAsset = idAsset;
+		this.isin = isin;
+		this.nom = nom;
+		this.classType = classType;
+		this.zone = zone;
+	}
 
 	public Asset(float dernierPrix, Date dateMAJ) {
 		super();

@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+
 import javax.sql.DataSource;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +13,7 @@ import idao.AllocationIDAO;
 import model.Allocation;
 import model.AllocationHistorique;
 import model.Asset;
+import model.ClientFinal;
 import model.PortefeuilleG;
 import model.PortefeuilleHistorique;
 
@@ -54,7 +57,7 @@ public class AllocationDAO implements AllocationIDAO{
 	public void findAllAllocationTopaze(AllocationHistoriqueDAO allocationHistoriqueDAO){
 
 		String sql = "select a.nbins,a.nbpos,a.dapos,a.qtpos,a.vapos,a.wgpos FROM tw_position a where a.dapos= "
-				+ "(select max(b.dapos) from topazeweb.tw_position b where a.nbins=b.nbins and a.nbpos=b.nbpos)";
+				+ "(select max(b.dapos) from tw_position b where a.nbins=b.nbins and a.nbpos=b.nbpos)";
 
 		Connection conn = null;
 
@@ -107,9 +110,6 @@ public class AllocationDAO implements AllocationIDAO{
 			}
 		}
 	}
-
-	/*select a.nbins,a.nbpos,a.dapos FROM topazeweb.tw_position a where a.nbins=46 and a.nbpos=2 
-			and a.dapos= (select max(b.dapos) from topazeweb.tw_position b where a.nbins=b.nbins and a.nbpos=b.nbpos);*/
 	
 	@Transactional(value="txManagerWiseam",readOnly = false)
 	public void insertWiseamAllocation (Allocation allocation) {
@@ -117,6 +117,14 @@ public class AllocationDAO implements AllocationIDAO{
 		System.out.println(allocation.toString());
 		
 		hibernateWiseam.saveOrUpdate(allocation);
+
+	}
+	
+	@Transactional(value="txManagerWiseam",readOnly = false)
+	public List<Allocation> findWiseamAllocation(int idAsset,int idPortefG) {
+		
+		Object[] params = new Object[]{idAsset,idPortefG};
+		return (List<Allocation>) hibernateWiseam.find("select r from Allocation r where r.asset.idAsset=? and r.portef.idPortefG=?",params);
 
 	}
 }

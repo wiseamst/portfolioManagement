@@ -4,9 +4,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.sql.DataSource;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -17,8 +23,11 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import idao.AllocationWecoHistoriqueIDAO;
+import model.Allocation;
+import model.AllocationHistorique;
 import model.AllocationWecoHistorique;
 import model.PortefeuilleG;
+import series.Performance;
 
 public class AllocationWecoHistoriqueDAO implements  AllocationWecoHistoriqueIDAO {
 
@@ -54,6 +63,47 @@ public class AllocationWecoHistoriqueDAO implements  AllocationWecoHistoriqueIDA
 	}
 	public void setHibernateTopaze(HibernateTemplate hibernateTopaze) {
 		this.hibernateTopaze = hibernateTopaze;
+	}
+	
+	@Transactional(value="txManagerWiseam",readOnly = false)
+	public List<AllocationWecoHistorique> findAllWecos(){
+
+	String sql = "SELECT a.facteursRisque,a.pourcentagePTF,a.pourcentageBench,a.diff,a.commentaireWeco,a.dateweco,a.idportefg from allocationwecohistorique a where a.dateweco=(select max(b.dateweco) from allocationwecohistorique b)";
+
+		Connection conn = null;
+
+		try {
+			conn = dataSourceWiseam.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			AllocationWecoHistorique allocationWecoHistorique= null;
+			List<AllocationWecoHistorique> wecos = new ArrayList<AllocationWecoHistorique>();
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				PortefeuilleG portefeuilleG = hibernateWiseam.get(PortefeuilleG.class, rs.getInt("IDPORTEFG"));
+				allocationWecoHistorique = new AllocationWecoHistorique(
+					rs.getString("FACTEURSRISQUE"),
+					rs.getFloat("POURCENTAGEPTF"),
+					rs.getFloat("POURCENTAGEBENCH"),
+					rs.getFloat("DIFF"),
+					rs.getString("COMMENTAIREWECO"),
+					rs.getDate("DATEWECO")
+				);
+				allocationWecoHistorique.setPtfG(portefeuilleG);
+				wecos.add(allocationWecoHistorique);
+				
+			}
+			rs.close();
+			ps.close();
+			return wecos;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+				conn.close();
+				} catch (SQLException e) {}
+			}
+		}
 	}
 	
 	@Transactional(value="txManagerWiseam",readOnly = false)
