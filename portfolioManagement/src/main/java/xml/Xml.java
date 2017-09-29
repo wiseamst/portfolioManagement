@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name="XML")
 @XmlType(propOrder = {"title", "date","freq", "ref","idreporting", "type","cat","client","overview","listCapsule"})
-public class XmlForExtranet {
+public class Xml {
 
 	private String title;
 	private String date;

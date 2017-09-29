@@ -16,7 +16,7 @@ public class Data {
 	private String style;
 	private List<String> legend;
 	private List<Set> listSet = new ArrayList<Set>();
-	private List<Row> listRow = new ArrayList<Row>();
+	private List<Rows> listRow = new ArrayList<Rows>();
 	private String disclaimer;
 	private List<String> listText = new ArrayList<String>();
 	
@@ -59,11 +59,11 @@ public class Data {
 		this.listSet = listSet;
 	}
 	
-	public List<Row> getListRow() {
+	public List<Rows> getListRow() {
 		return listRow;
 	}
 	@XmlElement(name="row")
-	public void setListRow(List<Row> listRow) {
+	public void setListRow(List<Rows> listRow) {
 		this.listRow = listRow;
 	}
 

@@ -6,6 +6,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement
@@ -13,6 +14,7 @@ import javax.xml.bind.annotation.XmlType;
 public class Capsule {
 
 	private int id;
+	private int weight;
 	private String type;
 	private String title;
 	private List<Data> listData = new ArrayList<Data>();
@@ -21,9 +23,9 @@ public class Capsule {
 		super();
 	}
 
-	public Capsule(int id, String type, String title) {
+	public Capsule(int weight, String type, String title) {
 		super();
-		this.id = id;
+		this.weight = weight;
 		this.type = type;
 		this.title = title;
 	}
@@ -34,12 +36,26 @@ public class Capsule {
 		this.type = type;
 	}
 
-	@XmlAttribute
+	public Capsule(String type) {
+		super();
+		this.type = type;
+	}
+
+	@XmlTransient
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	@XmlAttribute
+	public int getWeight() {
+		return weight;
+	}
+	public void setWeight(int weight) {
+		this.weight = weight;
 	}
 	
 	@XmlAttribute

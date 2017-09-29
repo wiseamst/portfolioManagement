@@ -6,6 +6,8 @@ import java.sql.SQLException;
 
 import java.text.ParseException;
 
+import javax.xml.bind.JAXBException;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.dao.DataAccessException;
@@ -29,7 +31,7 @@ import xml.RunXml;
 
 public class App {
 
-	public static void main(String[] args) throws DataAccessException, ParseException {
+	public static void main(String[] args) throws DataAccessException, ParseException, JAXBException {
  
 		try {
 			
@@ -66,7 +68,7 @@ public class App {
             
             //Création des services
             
-/*            ServiceAsset serviceAsset = new ServiceAsset(assetDAO,assetHistoriqueDAO);
+            ServiceAsset serviceAsset = new ServiceAsset(assetDAO,assetHistoriqueDAO);
 
             serviceAsset.findAllAssetTopaze();//Chargement des assets
             
@@ -84,9 +86,8 @@ public class App {
             ServiceAllocationWeco serviceAllocationWeco = new ServiceAllocationWeco(allocationWecoHistoriqueDAO);
             
             serviceAllocationWeco.findAllWeco(portefeuilleGDAO);//Chargement des wecos
-*/         
-            RunXml runXML = new RunXml(portefeuilleGDAO,portefeuilleHistoriqueDAO,allocationDAO,allocationWecoHistoriqueDAO,assetDAO,assetHistoriqueDAO); 
-            runXML.runXmlAllPtfs();
+         
+
             
 		} catch (SQLException e) {
 			System.out.println("Connection down");

@@ -6,27 +6,27 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
-public class Row {
+public class Rows {
 
 	private String style;
 	private List<Cell>  listCell = new ArrayList<Cell>();
 	
-	public Row() {
+	public Rows() {
 		super();
 	}
 
-	public Row(String style) {
+	public Rows(String style) {
 		super();
 		this.style = style;
 	}
 
-	public Row(String style, List<Cell> listCell) {
+	public Rows(String style, List<Cell> listCell) {
 		super();
 		this.style = style;
 		this.listCell = listCell;
 	}
 
-	public Row(List<Cell> listCell) {
+	public Rows(List<Cell> listCell) {
 		super();
 		this.listCell = listCell;
 	}
